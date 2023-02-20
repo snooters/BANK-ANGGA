@@ -10,7 +10,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const { PORT_API } = process.env;
-let version = "1.5.8"
+let { VERSION_API } = process.env;
 
 const app = express();
 
@@ -38,7 +38,7 @@ app.use('/echo', echorouter);
 app.listen(PORT_API, function () {
   console.log('==============================================');
   console.log('Welcome to Rest FULL API BPR ANGGA PERKASA');
-  console.log('Version: ' + version);
+  console.log('Version: ' + VERSION_API);
   console.log('@PT. Permata Niaga Nusantara');
   console.log('Author: ANAND');
   console.log('Server is running on port ' + PORT_API);

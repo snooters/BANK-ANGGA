@@ -19,7 +19,7 @@ var PPOBRouter = require('./routes/PPOB');
 var tariktunaiRouter = require('./routes/tariktunai');
 var transferrouter = require('./routes/transfer');
 var echorouter = require('./routes/echo');
-
+var indexRouter = require('./routes/home');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -34,6 +34,7 @@ app.use('/ppob', PPOBRouter);
 app.use('/tariktunai', tariktunaiRouter);
 app.use('/transfer', transferrouter);
 app.use('/echo', echorouter);
+app.use('/', indexRouter);
 
 app.listen(PORT_API, function () {
   console.log('==============================================');

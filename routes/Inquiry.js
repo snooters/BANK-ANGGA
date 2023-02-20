@@ -9,6 +9,8 @@ var path = require('path');
 const { getnameacct } = require('../controller/inquiry_acct');
 const { getsaldoacct } = require('../controller/inquiry_acct');
 const { getprint } = require('../controller/consoledata');
+const { insertlog } = require('../controller/insertlog');
+
 const {
     rek_tidakada,
     rek_tutup,
@@ -40,10 +42,14 @@ router.post('/', async (req, res) => {
             .json(validate);
     }
     const { bpr_id, trx_code, trx_type, tgl_trans, tgl_transmis, rrn, no_rek, gl_jns, data } = req.body;
+    let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data
     let hasil, senddata, sts
     let value = []
     // inquiry account name
     if (trx_code == Inquiry_Account) {
+        await insertlog("REQ", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
         hasil = await getnameacct(no_rek, gl_jns)
         if (Object.keys(hasil).length != 0) {
             // akun inquiri GL
@@ -114,6 +120,8 @@ router.post('/', async (req, res) => {
                     }
                 }
             }
+            await await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
             getprint("ACCOUNT INQUERY", senddata)
             return res.status(200).send(
@@ -127,6 +135,9 @@ router.post('/', async (req, res) => {
                 rrn: rrn,
                 data: null
             }
+
+            await await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
 
             getprint("ACCOUNT INQUERY", senddata)
 
@@ -202,6 +213,9 @@ router.post('/', async (req, res) => {
                 tgl_transmis: tgl_transmis
             }
         }
+        await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
         getprint("BALANCE INQUERY", senddata)
         return res.status(200).send({
             code: Successful,

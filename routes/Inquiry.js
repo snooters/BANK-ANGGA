@@ -10,6 +10,7 @@ const { getnameacct } = require('../controller/inquiry_acct');
 const { getsaldoacct } = require('../controller/inquiry_acct');
 const { getprint } = require('../controller/consoledata');
 const { insertlog } = require('../controller/insertlog');
+const { stsclose } = require('../controller/closeatm');
 
 const {
     rek_tidakada,
@@ -40,6 +41,16 @@ router.post('/', async (req, res) => {
         return res
             .status(200)
             .json(validate);
+    }
+
+    let close_atm = await stsclose()
+    if (close_atm !== "OPEN") {
+        getprint("INQUIRY", "SERVER SEDANG CLOSING")
+        return res.status(200).send({
+            code: "089",
+            status: "GAGAL",
+            message: "SERVER SEDANG CLOSING"
+        })
     }
     const { bpr_id, trx_code, trx_type, tgl_trans, tgl_transmis, rrn, no_rek, gl_jns, data } = req.body;
     // let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data

@@ -8,6 +8,7 @@ const { getsaldoacct } = require('../controller/inquiry_acct');
 const { checkstatus } = require('../controller/checkstatus');
 const { token_pok } = require('../controller/token_pok');
 const { token_fee } = require('../controller/token_fee');
+const { stsclose } = require('../controller/closeatm');
 const v = new Validator();
 
 const {
@@ -51,7 +52,15 @@ router.post('/', async (req, res) => {
             .status(200)
             .json(validate);
     }
-
+    let close_atm = await stsclose()
+    if (close_atm !== "OPEN") {
+        getprint("TARIK TUNAI", "SERVER SEDANG CLOSING")
+        return res.status(200).send({
+            code: "089",
+            status: "GAGAL",
+            message: "SERVER SEDANG CLOSING"
+        })
+    }
     let { bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, acq_id, rrn, data } = req.body;
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2,
         gl_jns_cr_2, gl_amount_cr_2 } = data

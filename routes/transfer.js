@@ -11,6 +11,7 @@ const { trf_out_pok } = require('../controller/transfer_outpok');
 const { checkstatus } = require('../controller/checkstatus');
 const { pindahbuku_fee } = require('../controller/pindahbuku_fee');
 const { pindahbuku_pok } = require('../controller/pindahbuku_pok');
+const { stsclose } = require('../controller/closeatm');
 const v = new Validator();
 
 const {
@@ -59,7 +60,15 @@ router.post('/', async (req, res) => {
     }
 
 
-
+    let close_atm = await stsclose()
+    if (close_atm !== "OPEN") {
+        getprint("TRANSFER", "SERVER SEDANG CLOSING")
+        return res.status(200).send({
+            code: "089",
+            status: "GAGAL",
+            message: "SERVER SEDANG CLOSING"
+        })
+    }
 
     let { trx_code, trx_type, bpr_id, nama_bpr_id, no_rek, nama_rek, bank_tujuan, rek_tujuan, nama_tujuan, amount, trans_fee, keterangan, tgl_trans, tgl_transmis, rrn, data } = req.body
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data

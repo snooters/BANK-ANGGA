@@ -37,11 +37,11 @@ app.use('/echo', echorouter);
 app.use('/', indexRouter);
 
 app.listen(PORT_API, function () {
-  console.log('==============================================');
+  console.log('==================================================================  ');
   console.log('Welcome to Rest FULL API BPR ANGGA PERKASA');
   console.log('Version: ' + VERSION_API);
   console.log('@PT. Permata Niaga Nusantara');
   console.log('Author: ANAND');
   console.log('Server is running on port ' + PORT_API);
-  console.log('==============================================');
+  console.log('==================================================================  ');
 });

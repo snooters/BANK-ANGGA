@@ -42,13 +42,13 @@ router.post('/', async (req, res) => {
             .json(validate);
     }
     const { bpr_id, trx_code, trx_type, tgl_trans, tgl_transmis, rrn, no_rek, gl_jns, data } = req.body;
-    let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data
+    // let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data
     let hasil, senddata, sts
     let value = []
     // inquiry account name
     if (trx_code == Inquiry_Account) {
-        await insertlog("REQ", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+        await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", gl_jns, 0, "", "",
+            0, "", "", 0, "", "", 0, "")
 
         hasil = await getnameacct(no_rek, gl_jns)
         if (Object.keys(hasil).length != 0) {
@@ -120,10 +120,10 @@ router.post('/', async (req, res) => {
                     }
                 }
             }
-            await await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
-
-            getprint("ACCOUNT INQUERY", senddata)
+            await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
+                0, "", "", 0, "", "", 0, Successful)
+            getprint("ACCOUNT INQUIRY REQ", req.body)
+            getprint("ACCOUNT INQUIRY RES", senddata)
             return res.status(200).send(
                 senddata
             );
@@ -136,10 +136,11 @@ router.post('/', async (req, res) => {
                 data: null
             }
 
-            await await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
 
-            getprint("ACCOUNT INQUERY", senddata)
+            getprint("ACCOUNT INQUIRY REQ", req.body)
+            getprint("ACCOUNT INQUIRY RES", senddata)
 
             return res.status(200).send({
                 code: invelid_transaction,
@@ -152,9 +153,12 @@ router.post('/', async (req, res) => {
 
         // get balance account
     } else if (trx_code == Inquiry_Balance) {
+
         for (i in data) {
             let no_rek = data[i].no_rek
             let gl_jns = data[i].gl_jns
+            await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", gl_jns, 0, "", "",
+                0, "", "", 0, "", "", 0, "")
             hasil = await getsaldoacct(no_rek, gl_jns)
             if (Object.keys(hasil).length != 0) {
                 let stsrec = hasil[0].stsrec
@@ -163,6 +167,9 @@ router.post('/', async (req, res) => {
                 let saldoakhir = hasil[0].saldoakhir
                 let saldoeff = hasil[0].saldoeff
                 let sts
+                await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
+                    0, "", "", 0, "", "", 0, Successful)
+
                 switch (stsrec) {
                     case "N":
                         sts = "TIDAK AKTIF"
@@ -213,10 +220,9 @@ router.post('/', async (req, res) => {
                 tgl_transmis: tgl_transmis
             }
         }
-        await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
-        getprint("BALANCE INQUERY", senddata)
+        getprint("ACCOUNT INQUIRY REQ", req.body)
+        getprint("BALANCE INQUIRY RES", senddata)
         return res.status(200).send({
             code: Successful,
             status: "SUKSES",

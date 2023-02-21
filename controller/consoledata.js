@@ -1,8 +1,8 @@
-async function getprint(menu,data){
+async function getprint(menu, data) {
     // console.log("======================================================" )
-    console.log("Proses : " + menu   )
+    console.log("Proses : " + menu)
     console.log(data)
-    console.log('==============================================');
+    console.log('==================================================================');
 }
 
-module.exports = {getprint}
+module.exports = { getprint }

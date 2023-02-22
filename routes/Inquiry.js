@@ -147,8 +147,8 @@ router.post('/', async (req, res) => {
                 data: null
             }
 
-            await insertlog("RES", jns_req, bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, ket, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
+            await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
+                0, "", "", 0, "", "", 0, Successful)
 
             getprint("ACCOUNT INQUIRY REQ", req.body)
             getprint("ACCOUNT INQUIRY RES", senddata)

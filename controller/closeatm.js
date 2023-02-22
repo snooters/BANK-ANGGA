@@ -9,7 +9,7 @@ async function stsclose() {
     let hasil = await exect(querystr)
 
     if (Object.keys(hasil).length !== 0) {
-        if (hasil.stsclose == "C") {
+        if (hasil[0].stsclose == "Y") {
             return "CLOSED";
         } else {
             return "OPEN";

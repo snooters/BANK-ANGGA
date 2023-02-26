@@ -173,10 +173,15 @@ router.post('/', async (req, res) => {
             message: "SUKSES",
             rrn: rrn,
             data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
                 no_rek: gl_rek_db_1,
-                amount: amount,
-                fee: trans_fee,
-                noreff: tgl_trans.substr(0, 8) + rrn
+                nama_rek: nama_rekdr,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
             }
         });
 

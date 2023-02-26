@@ -195,10 +195,13 @@ router.post('/', async (req, res) => {
                     bpr_id: bpr_id,
                     trx_code: trx_code,
                     trx_type: trx_type,
+                    no_hp: no_hp,
+                    no_rek: no_rek,
+                    nama: nama_dr,
+                    amount: amount,
+                    trans_fee: trans_fee,
                     tgl_trans: tgl_trans,
                     tgl_transmis: tgl_transmis,
-                    no_rek: gl_rek_db_1,
-                    nama_rek: nama_rekdr,
                     noreff: tgl_trans.substr(0, 8) + rrn,
                     status_rek: "AKTIF"
                 }

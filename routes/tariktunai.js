@@ -9,6 +9,7 @@ const { checkstatus } = require('../controller/checkstatus');
 const { token_pok } = require('../controller/token_pok');
 const { token_fee } = require('../controller/token_fee');
 const { stsclose } = require('../controller/closeatm');
+const { insertlog } = require('../controller/insertlog');
 const v = new Validator();
 
 const {
@@ -65,12 +66,47 @@ router.post('/', async (req, res) => {
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2,
         gl_jns_cr_2, gl_amount_cr_2 } = data
 
+    if (trx_type == "REV") {
+        let hasil = await check_rev(bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+        if (hasil !== "ADA") {
+            getprint("REV PPOB", {
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "GAGAL",
+                rrn: rrn,
+                data: {
+                    no_rek: gl_rek_db_1,
+                    amount: amount,
+                    fee: trans_fee
+                }
+            });
+
+            return res.status(200).send({
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "Transaksi tidak ditemukan",
+                rrn: rrn,
+                data: null
+            });
+        }
+    }
+
+    await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+        gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
+
+
     const myArray = ["TRX", "REV"]
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
 
         /* A function that is called when the transaction type is invalid. */
         getprint("REQ TOKEN", "TRX_TYPE SALAH")
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
+
 
         return res.status(200).send({
             code: invelid_transaction,
@@ -88,6 +124,9 @@ router.post('/', async (req, res) => {
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
+
             return res.status(200).send(
                 valdr
             )
@@ -97,6 +136,8 @@ router.post('/', async (req, res) => {
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
             return res.status(200).send(
                 valcr1
             )
@@ -106,15 +147,22 @@ router.post('/', async (req, res) => {
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
             return res.status(200).send(
                 valcr2
             )
         };
 
         nama_dr = await token_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, trx_type, keterangan, rrn)
+
         if (trans_fee > 0) {
             nama_cr = await token_fee(gl_rek_dr_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, trx_type, keterangan, rrn)
         }
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
         getprint("TARIK TUNAI TOKEN", {
             code: Successful,
             status: "SUKSES",
@@ -166,6 +214,9 @@ router.post('/', async (req, res) => {
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
+
             return res.status(200).send(
                 valdr
             )
@@ -175,6 +226,9 @@ router.post('/', async (req, res) => {
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
+
             return res.status(200).send(
                 valcr1
             )
@@ -184,6 +238,9 @@ router.post('/', async (req, res) => {
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
             return res.status(200).send(
                 valcr2
             )
@@ -193,6 +250,9 @@ router.post('/', async (req, res) => {
         if (trans_fee > 0) {
             nama_cr = await token_fee(gl_rek_dr_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, trx_type, keterangan, rrn)
         }
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
         getprint("RELEASE TARIK TUNAI ", {
             code: Successful,
             status: "SUKSES",

@@ -17,6 +17,7 @@
     "fastest-validator": "^1.16.0",
     "fs": "^0.0.1-security",
     "http-errors": "~1.6.3",
+    "https": "^1.0.0",
     "morgan": "^1.10.0",
     "msnodesqlv8": "^3.0.1",
     "mssql": "^9.1.1",

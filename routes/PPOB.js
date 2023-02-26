@@ -11,6 +11,8 @@ const { getsaldoacct } = require('../controller/inquiry_acct');
 const { checkstatus } = require('../controller/checkstatus');
 const { insertlog } = require('../controller/insertlog');
 const { stsclose } = require('../controller/closeatm');
+const { check_rev } = require('../controller/check_rev');
+
 const v = new Validator();
 
 const {
@@ -70,8 +72,37 @@ router.post('/', async (req, res) => {
     await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
         gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
+    // cek reversal
+    if (trx_type == "REV") {
+        let hasil = await check_rev(bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+        if (hasil !== "ADA") {
+            getprint("REV PPOB", {
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "GAGAL",
+                rrn: rrn,
+                data: {
+                    no_rek: gl_rek_db_1,
+                    amount: amount,
+                    fee: trans_fee
+                }
+            });
+
+            return res.status(200).send({
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "Transaksi tidak ditemukan",
+                rrn: rrn,
+                data: null
+            });
+        }
+    }
+
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
+
         getprint("PPOB", "TRX_TYPE SALAH")
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
@@ -87,7 +118,7 @@ router.post('/', async (req, res) => {
 
     if (trx_code == PPOB) {
 
-        /* Checking the status of the account. */
+        /* check status rekening debet */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
@@ -100,7 +131,7 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /* check status rek kredit 1 */
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
         if (valcr1 === undefined) {
 
@@ -113,7 +144,7 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /* check status rek kredit 2 */
         let valcr2 = await checkstatus(gl_rek_cr_2, gl_jns_cr_2, 0, rrn)
         if (valcr2 === undefined) {
 
@@ -132,6 +163,8 @@ router.post('/', async (req, res) => {
         if (trans_fee > 0) {
             await feeppob(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, product_name)
         }
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
 
         getprint("PPOB", {
@@ -142,7 +175,8 @@ router.post('/', async (req, res) => {
             data: {
                 no_rek: gl_rek_db_1,
                 amount: amount,
-                fee: trans_fee
+                fee: trans_fee,
+                noreff: tgl_trans.substr(0, 8) + rrn
             }
         });
 

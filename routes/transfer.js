@@ -243,10 +243,10 @@ router.post('/', async (req, res) => {
         };
 
         /* A function that is called from another file. */
-        nama_rekdr = await trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, product_name)
+        nama_rekdr = await trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, keterangan)
 
         if (trans_fee > 0) {
-            await trf_out_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, product_name)
+            await trf_out_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan)
         }
 
 
@@ -333,10 +333,10 @@ router.post('/', async (req, res) => {
         };
 
         /* A function that is called from another file. */
-        nama_rekdr = await pindahbuku_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, product_name)
+        nama_rekdr = await pindahbuku_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, keterangan)
 
         if (trans_fee > 0) {
-            await pindahbuku_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, product_name)
+            await pindahbuku_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan)
         }
 
 

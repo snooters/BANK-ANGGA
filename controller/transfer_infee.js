@@ -34,7 +34,10 @@ const {
     KODE_TRN_BUKU_TRFOUTPOK,
     KODE_TRN_BUKU_TRFOUTFEE,
     KODE_TRN_BUKU_PINDAHBUKUPOK,
-    KODE_TRN_BUKU_PINDAHBUKUFEE
+    KODE_TRN_BUKU_PINDAHBUKUFEE,
+    KD_BANK,
+    KD_CAB,
+    KD_LOC,
 } = process.env;
 
 async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, product_name) {
@@ -69,7 +72,7 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         batch = BATCH
         kodetrn = KODE_TRN_TRFIN
         if (jnsdracc == "1") {
-            dracc = cracc.substr(0, 7) + "10" + dracc
+            dracc = KD_BANK + KD_CAB + KD_LOC + "10" + dracc
         } {
             dracc = dracc
         }
@@ -77,7 +80,7 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         drmodul = jnsdracc
 
         if (jnscracc == "1") {
-            cracc = dracc.substr(0, 7) + "10" + cracc
+            cracc = KD_BANK + KD_CAB + KD_LOC + "10" + cracc
         } else {
             cracc = cracc
         }
@@ -87,9 +90,9 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         // nominal = nominal
         tglval = tgltrn
         ket = product_name
-        kodebpr = dracc.substr(0, 3)
-        kodecab = dracc.substr(3, 2)
-        kodeloc = dracc.substr(5, 2)
+        kodebpr = KD_BANK
+        kodecab = KD_CAB
+        kodeloc = KD_LOC
         ststrn = "5"
         inpuser = USER_ID
         jam = new Date()
@@ -114,8 +117,19 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         thnbln = tgltrn.substr(0, 6)
         jnstrnlx = ""
         jnstrntx = "03"
-        trnke_dr = inqueridr[0].trnke
-        trnke_cr = inquericr[0].trnke
+
+        if (jnsdracc == "2") {
+            trnke_dr = inqueridr[0].trnke
+        } else {
+            trnke_dr = 0
+        }
+
+        if (jnscracc == "2") {
+            trnke_cr = inquericr[0].trnke
+        } else {
+            trnke_cr = 0
+        }
+
         stscetakcr = "N"
         kdaodr = "N"
         kdaocr = "N"
@@ -124,8 +138,18 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         kdtrnbuku = KODE_TRN_BUKU_TRFINFEE
         depfrom = ""
         depto = ""
-        namadr = inqueridr[0].fnama
-        namacr = inquericr[0].fnama
+
+        if (jnsdracc == "2") {
+            namadr = inqueridr[0].fnama
+        } else {
+            namadr = inqueridr[0].namaaccount
+        }
+
+        if (jnscracc == "2") {
+            namacr = inquericr[0].fnama
+        } else {
+            namacr = inquericr[0].namaaccount
+        }
         // ambil nomor transaksi per batch
         let query = "select nomor + 10 as nomor from nomaster where batch=" + BATCH
         hasil = await exect(query)
@@ -213,7 +237,7 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         kodetrn = KODE_TRN_TRFIN
 
         if (jnsdracc == "1") {
-            dracc = crac.substr(0, 7) + "10" + dracc
+            dracc = KD_BANK + KD_CAB + KD_LOC + "10" + dracc
         } else {
             dracc = dracc
         }
@@ -221,7 +245,7 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         drmodul = jnsdracc
 
         if (jnscracc == "1") {
-            cracc = dracc.substr(0, 7) + "10" + cracc
+            cracc = KD_BANK + KD_CAB + KD_LOC + "10" + cracc
         } else {
             cracc = cracc
         }
@@ -232,9 +256,9 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         nominal = nominal
         tglval = tgltrn
         ket = product_name
-        kodebpr = dracc.substr(0, 3)
-        kodecab = dracc.substr(3, 2)
-        kodeloc = dracc.substr(5, 2)
+        kodebpr = KD_BANK
+        kodecab = KD_CAB
+        kodeloc = KD_LOC
         ststrn = "5"
         inpuser = USER_ID
         jam = new Date()
@@ -259,8 +283,18 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         thnbln = tgltrn.substr(0, 6)
         jnstrnlx = ""
         jnstrntx = "03"
-        trnke_dr = inqueridr[0].trnke
-        trnke_cr = inquericr[0].trnke
+
+        if (jnsdracc == "2") {
+            trnke_dr = inqueridr[0].trnke
+        } else {
+            trnke_dr = 0
+        }
+
+        if (jnscracc == "2") {
+            trnke_cr = inquericr[0].trnke
+        } else {
+            trnke_cr = 0
+        }
         stscetakcr = "N"
         kdaodr = "N"
         kdaocr = "N"
@@ -269,8 +303,18 @@ async function trf_in_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         kdtrnbuku = KODE_TRN_BUKU_TRFINFEE
         depfrom = ""
         depto = ""
-        namadr = inqueridr[0].fnama
-        namacr = inquericr[0].fnama
+
+        if (jnsdracc == "2") {
+            namadr = inqueridr[0].fnama
+        } else {
+            namadr = inqueridr[0].namaaccount
+        }
+
+        if (jnscracc == "2") {
+            namacr = inquericr[0].fnama
+        } else {
+            namacr = inquericr[0].namaaccount
+        }
         // ambil nomor transaksi per batch
         let query = "select nomor + 10 as nomor from nomaster where batch='" + BATCH + "'"
         hasil = await exect(query)

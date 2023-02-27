@@ -85,12 +85,12 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         groupno = 0
         modul = ""
         if (jnsdracc == "2") {
-            sbbperalihan_dr = KD_BANK + KD_CAB + KD_LOC + "10" + inqueridr[0].sbbtab
+            sbbperalihan_dr = dracc.substr(0, 7) + "10" + inqueridr[0].sbbtab
         } else {
             sbbperalihan_dr = dracc
         }
         if (jnscracc == "2") {
-            sbbperalihan_cr = KD_BANK + KD_CAB + KD_LOC + "10" + inquericr[0].sbbtab
+            sbbperalihan_cr = cracc.substr(0, 7) + "10" + inquericr[0].sbbtab
         } else {
             sbbperalihan_cr = cracc
         }
@@ -98,8 +98,19 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         thnbln = tgltrn.substr(0, 6)
         jnstrnlx = ""
         jnstrntx = "03"
-        trnke_dr = inqueridr[0].trnke
-        trnke_cr = inquericr[0].trnke
+
+        if (jnsdracc == "2") {
+            trnke_dr = inqueridr[0].trnke
+        } else {
+            trnke_dr = 0
+        }
+
+        if (jnscracc == "2") {
+            trnke_cr = inquericr[0].trnke
+        } else {
+            trnke_cr = 0
+        }
+
         stscetakcr = "N"
         kdaodr = "N"
         kdaocr = "N"
@@ -108,8 +119,18 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         kdtrnbuku = KODE_TRN_BUKU_TARTUNFEE
         depfrom = ""
         depto = ""
-        namadr = inqueridr[0].fnama
-        namacr = inquericr[0].fnama
+
+        if (jnsdracc == "2") {
+            namadr = inqueridr[0].fnama
+        } else {
+            namadr = inqueridr[0].namaaccount
+        }
+
+        if (jnscracc == "2") {
+            namacr = inquericr[0].fnama
+        } else {
+            namacr = inquericr[0].namaaccount
+        }
         // ambil nomor transaksi per batch
         let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
         hasil = await exect(query)
@@ -219,13 +240,13 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         groupno = 0
         modul = ""
         if (jnsdracc == "2") {
-            sbbperalihan_dr = KD_BANK + KD_CAB + KD_LOC + "10" + inqueridr[0].sbbtab
+            sbbperalihan_dr = dracc.substr(0, 7) + "10" + inqueridr[0].sbbtab
         } else {
             sbbperalihan_dr = dracc
         }
         if (jnscracc == "2") {
 
-            sbbperalihan_cr = KD_BANK + KD_CAB + KD_LOC + "10" + inquericr[0].sbbtab
+            sbbperalihan_cr = cracc.substr(0, 7) + "10" + inquericr[0].sbbtab
         } else {
             sbbperalihan_cr = cracc
         }
@@ -233,8 +254,19 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         thnbln = tgltrn.substr(0, 6)
         jnstrnlx = ""
         jnstrntx = "03"
-        trnke_dr = inqueridr[0].trnke
-        trnke_cr = inquericr[0].trnke
+
+        if (jnsdracc == "2") {
+            trnke_dr = inqueridr[0].trnke
+        } else {
+            trnke_dr = 0
+        }
+
+        if (jnscracc == "2") {
+            trnke_cr = inquericr[0].trnke
+        } else {
+            trnke_cr = 0
+        }
+
         stscetakcr = "N"
         kdaodr = "N"
         kdaocr = "N"
@@ -243,8 +275,18 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         kdtrnbuku = KODE_TRN_BUKU_TARTUNFEE
         depfrom = ""
         depto = ""
-        namadr = inqueridr[0].fnama
-        namacr = inquericr[0].fnama
+
+        if (jnsdracc == "2") {
+            namadr = inqueridr[0].fnama
+        } else {
+            namadr = inqueridr[0].namaaccount
+        }
+
+        if (jnscracc == "2") {
+            namacr = inquericr[0].fnama
+        } else {
+            namacr = inquericr[0].namaaccount
+        }
         // ambil nomor transaksi per batch
         let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
         hasil = await exect(query)

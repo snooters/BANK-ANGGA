@@ -12,6 +12,7 @@ const { checkstatus } = require('../controller/checkstatus');
 const { pindahbuku_fee } = require('../controller/pindahbuku_fee');
 const { pindahbuku_pok } = require('../controller/pindahbuku_pok');
 const { stsclose } = require('../controller/closeatm');
+const { check_rev } = require('../controller/check_rev');
 const v = new Validator();
 
 const {
@@ -88,12 +89,38 @@ router.post('/', async (req, res) => {
         });
     };
 
+    if (trx_type == "REV") {
+        let hasil = await check_rev(bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+        if (hasil !== "ADA") {
+            getprint("REV TRANSFER", {
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "Transaksi tidak ditemukan",
+                rrn: rrn,
+                data: null
+            });
+
+            return res.status(200).send({
+                code: invelid_transaction,
+                status: "GAGAL",
+                message: "Transaksi tidak ditemukan",
+                rrn: rrn,
+                data: null
+            });
+        }
+    }
+
     if (trx_code == Transfer_In) {
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+
+            getprint("TRANSFER IN", valdr)
+
             return res.status(200).send(
                 valdr
             )
@@ -104,6 +131,9 @@ router.post('/', async (req, res) => {
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+
+            getprint("TRANSFER IN", valcr1)
+
             return res.status(200).send(
                 valcr1
             )
@@ -114,6 +144,9 @@ router.post('/', async (req, res) => {
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+
+            getprint("TRANSFER IN", valcr2)
+
             return res.status(200).send(
                 valcr2
             )
@@ -133,30 +166,37 @@ router.post('/', async (req, res) => {
             message: "SUKSES",
             rrn: rrn,
             data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
                 no_rek: gl_rek_db_1,
-                amount: amount,
-                fee: trans_fee
+                nama_rek: nama_rekdr,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
             }
         });
 
-        return res.status(200).send(
-            {
-                code: Successful,
-                status: "SUKSES",
-                message: "SUKSES",
-                rrn: rrn,
-                data: {
-                    bpr_id: bpr_id,
-                    trx_code: trx_code,
-                    trx_type: trx_type,
-                    tgl_trans: tgl_trans,
-                    tgl_transmis: tgl_transmis,
-                    no_rek: gl_rek_db_1,
-                    nama_rek: nama_rekdr,
-                    noreff: tgl_trans.substr(0, 8) + rrn,
-                    status_rek: "AKTIF"
-                }
-            });
+        return res.status(200).send({
+            code: Successful,
+            status: "SUKSES",
+            message: "SUKSES",
+            rrn: rrn,
+            data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_rek: no_rek,
+                nama: nama_rekdr,
+                amount: amount,
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
+            }
+        });
 
 
 
@@ -168,6 +208,9 @@ router.post('/', async (req, res) => {
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+
+            getprint("TRANSFER OUT", valdr)
+
             return res.status(200).send(
                 valdr
             )
@@ -178,6 +221,9 @@ router.post('/', async (req, res) => {
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+
+            getprint("TRANSFER OUT", valcr1)
+
             return res.status(200).send(
                 valcr1
             )
@@ -188,6 +234,9 @@ router.post('/', async (req, res) => {
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+
+            getprint("TRANSFER OUT", valcr2)
+
             return res.status(200).send(
                 valcr2
             )
@@ -207,9 +256,17 @@ router.post('/', async (req, res) => {
             message: "SUKSES",
             rrn: rrn,
             data: {
-                no_rek: gl_rek_db_1,
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_rek: no_rek,
+                nama: nama_rekdr,
                 amount: amount,
-                fee: trans_fee
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
             }
         });
 
@@ -223,10 +280,12 @@ router.post('/', async (req, res) => {
                     bpr_id: bpr_id,
                     trx_code: trx_code,
                     trx_type: trx_type,
+                    no_rek: no_rek,
+                    nama: nama_rekdr,
+                    amount: amount,
+                    trans_fee: trans_fee,
                     tgl_trans: tgl_trans,
                     tgl_transmis: tgl_transmis,
-                    no_rek: gl_rek_db_1,
-                    nama_rek: nama_rekdr,
                     noreff: tgl_trans.substr(0, 8) + rrn,
                     status_rek: "AKTIF"
                 }
@@ -240,6 +299,9 @@ router.post('/', async (req, res) => {
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+
+            getprint("PINDAH BUKU", valdr)
+
             return res.status(200).send(
                 valdr
             )
@@ -250,6 +312,9 @@ router.post('/', async (req, res) => {
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+
+            getprint("PINDAH BUKU", valcr1)
+
             return res.status(200).send(
                 valcr1
             )
@@ -260,6 +325,8 @@ router.post('/', async (req, res) => {
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+
+            getprint("PINDAH BUKU", valcr2)
             return res.status(200).send(
                 valcr2
             )
@@ -279,30 +346,39 @@ router.post('/', async (req, res) => {
             message: "SUKSES",
             rrn: rrn,
             data: {
-                no_rek: gl_rek_db_1,
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_rek: no_rek,
+                nama: nama_rekdr,
                 amount: amount,
-                fee: trans_fee
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
             }
         });
 
-        return res.status(200).send(
-            {
-                code: Successful,
-                status: "SUKSES",
-                message: "SUKSES",
-                rrn: rrn,
-                data: {
-                    bpr_id: bpr_id,
-                    trx_code: trx_code,
-                    trx_type: trx_type,
-                    tgl_trans: tgl_trans,
-                    tgl_transmis: tgl_transmis,
-                    no_rek: gl_rek_db_1,
-                    nama_rek: nama_rekdr,
-                    noreff: tgl_trans.substr(0, 8) + rrn,
-                    status_rek: "AKTIF"
-                }
-            });
+        return res.status(200).send({
+            code: Successful,
+            status: "SUKSES",
+            message: "SUKSES",
+            rrn: rrn,
+            data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_rek: no_rek,
+                nama: nama_rekdr,
+                amount: amount,
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
+            }
+        });
 
 
     } else {

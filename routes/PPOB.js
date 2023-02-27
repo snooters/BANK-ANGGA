@@ -126,6 +126,8 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
+            getprint("PPOB", valdr);
+
             return res.status(200).send(
                 valdr
             )
@@ -139,6 +141,8 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
 
+            getprint("PPOB", valcr1);
+
             return res.status(200).send(
                 valcr1
             )
@@ -151,6 +155,8 @@ router.post('/', async (req, res) => {
         } else if (Object.keys(valcr2).length !== 0) {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
+            getprint("PPOB", valcr2);
 
             return res.status(200).send(
                 valcr2
@@ -176,10 +182,13 @@ router.post('/', async (req, res) => {
                 bpr_id: bpr_id,
                 trx_code: trx_code,
                 trx_type: trx_type,
+                no_hp: no_hp,
+                no_rek: no_rek,
+                nama: nama_rekdr,
+                amount: amount,
+                trans_fee: trans_fee,
                 tgl_trans: tgl_trans,
                 tgl_transmis: tgl_transmis,
-                no_rek: gl_rek_db_1,
-                nama_rek: nama_rekdr,
                 noreff: tgl_trans.substr(0, 8) + rrn,
                 status_rek: "AKTIF"
             }
@@ -197,7 +206,7 @@ router.post('/', async (req, res) => {
                     trx_type: trx_type,
                     no_hp: no_hp,
                     no_rek: no_rek,
-                    nama: nama_dr,
+                    nama: nama_rekdr,
                     amount: amount,
                     trans_fee: trans_fee,
                     tgl_trans: tgl_trans,

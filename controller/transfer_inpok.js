@@ -43,14 +43,18 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
 
         if (jnsdracc == "2") {
             if (jnsdracc == "2") {
-                let query = "update m_tabunganc set mutasidr= mutasidr + " + nom_pok + ",trnke = trnke + 1,tgltrnakhir='" + tgl[0].tglsekarang + "',saldoakhir = saldoakhir - " + nom_pok + " where noacc ='" + dracc + "'";
+                let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},
+                            trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                            saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
                 await exect(query)
             }
         }
 
         if (jnscracc == "2") {
 
-            let query = "update m_tabunganc set mutasicr= mutasicr + " + nom_pok + ",trnke = trnke + 1,tgltrnakhir='" + tgl[0].tglsekarang + "',saldoakhir = saldoakhir + " + nom_pok + " where noacc ='" + cracc + "'";
+            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                        saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
             await exect(query)
         }
 
@@ -99,7 +103,7 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
         }
 
         if (jnscracc == "2") {
-            sbbperalihan_cr = dracc.substr(0, 7) + "10" + inquericr[0].sbbtab
+            sbbperalihan_cr = cracc.substr(0, 7) + "10" + inquericr[0].sbbtab
         } else {
             sbbperalihan_cr = cracc
         }
@@ -140,34 +144,34 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             namacr = inquericr[0].namaaccount
         }
         // ambil nomor transaksi per batch
-        let query = "select nomor + 10 as nomor from nomaster where batch=" + BATCH
+        let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
         hasil = await exect(query)
 
         notrn = hasil[0].nomor
         // update nomor transaksi per batch
-        query = "update nomaster set nomor =" + notrn + " where batch=" + BATCH
+        query = `update nomaster set nomor =${notrn} where batch=${BATCH}`
         await exect(query)
 
         // insert table transaksi
-        query = "INSERT INTO transaksi " +
-            "(tgltrn,           trnuser,            batch,          notrn,          kodetrn," +
-            "dracc,             drmodul,            cracc,          crmodul,        dc," +
-            "dokumen,           nominal,            tglval,         ket,            kodebpr," +
-            "kodecab,           kodeloc,            ststrn,         inpuser,        inptgljam," +
-            "inpterm,           prog,               groupno,        modul,          sbbperalihan_dr," +
-            "sbbperalihan_cr,   stscetak,           thnbln,         jnstrnlx,       jnstrntx," +
-            "trnke_dr,          trnke_cr,           stscetakcr,     kdaodr,         kdaocr," +
-            "kdkoldr,           kdkolcr,            kdtrnbuku,      depfrom,        depto," +
-            "namadr,            namacr) VALUES " +
-            "('" + tgltrn + "','" + trnuser + "'," + batch + "," + notrn + ",'" + kodetrn + "','" +
-            dracc + "','" + drmodul + "','" + cracc + "','" + crmodul + "','" + dc + "','" +
-            dokumen + "'," + nom_pok + ",'" + tglval + "','" + ket + "','" + kodebpr + "','" +
-            kodecab + "','" + kodeloc + "','" + ststrn + "','" + inpuser + "','" + inptgljam + "','" +
-            inpterm + "','" + prog + "'," + groupno + ",'" + modul + "','" + sbbperalihan_dr + "','" +
-            sbbperalihan_cr + "','" + stscetak + "','" + thnbln + "','" + jnstrnlx + "','" + jnstrntx + "'," +
-            trnke_dr + "," + trnke_cr + ",'" + stscetakcr + "','" + kdaodr + "','" + kdaocr + "','" +
-            kdkoldr + "','" + kdkolcr + "','" + kdtrnbuku + "','" + depfrom + "','" + depto + "','" +
-            namadr + "','" + namacr + "')"
+        query = `INSERT INTO transaksi 
+           (tgltrn,                 trnuser,            batch,              notrn,          kodetrn,
+           dracc,                   drmodul,            cracc,              crmodul,        dc,
+           dokumen,                 nominal,            tglval,             ket,            kodebpr,
+           kodecab,                 kodeloc,            ststrn,             inpuser,        inptgljam,
+           inpterm,                 prog,               groupno,            modul,          sbbperalihan_dr,
+           sbbperalihan_cr,         stscetak,           thnbln,             jnstrnlx,       jnstrntx,
+           trnke_dr,                trnke_cr,           stscetakcr,         kdaodr,         kdaocr,
+           kdkoldr,                 kdkolcr,            kdtrnbuku,          depfrom,        depto,
+           namadr,                  namacr) VALUES 
+           ('${tgltrn}',            '${trnuser}',       ${batch},           ${notrn},       '${kodetrn}',
+           '${dracc}',              '${drmodul}',       '${cracc}',         '${crmodul}',   '${dc}',
+           '${dokumen}',            ${nom_pok},         '${tglval}',        '${ket}',       '${kodebpr}',
+           '${kodecab}',            '${kodeloc}',       '${ststrn}',        '${inpuser}',   '${inptgljam}',
+           '${inpterm}',            '${prog}',          ${groupno},         '${modul}',     '${sbbperalihan_dr}',
+           '${sbbperalihan_cr}',    '${stscetak}',      '${thnbln}',        '${jnstrnlx}',  '${jnstrntx}',
+           ${trnke_dr},             ${trnke_cr},        '${stscetakcr}',    '${kdaodr}',    '${kdaocr}',
+           '${kdkoldr}',            '${kdkolcr}',       '${kdtrnbuku}',     '${depfrom}',   '${depto}',
+           '${namadr}',             '${namacr}')`
 
         await exect(query)
 
@@ -176,12 +180,12 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             dc = "D"
             trnke = trnke_dr
             noacc = dracc
-            query = "INSERT INTO transpc " +
-                "(tgltrn,               batch,              notrn,              noacc,              dc," +
-                "nominal,               stscetak,           kdtrnbuku,          trnke)" +
-                "VALUES " +
-                "('" + tgltrn + "'," + batch + "," + notrn + ",'" + noacc + "','" + dc + "'," +
-                nom_pok + ",'" + stscetak + "','" + kdtrnbuku + "'," + trnke + ")"
+            query = `INSERT INTO transpc 
+               (tgltrn,                 batch,              notrn,              noacc,              dc,
+               nominal,                 stscetak,           kdtrnbuku,          trnke)
+               VALUES 
+               ('${tgltrn}',            ${batch},           ${notrn},           '${noacc}',         '${dc}',
+               ${nom_pok},              '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
             await exect(query)
         }
 
@@ -189,12 +193,12 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             dc = "C"
             trnke = trnke_cr
             noacc = cracc
-            query = "INSERT INTO transpc " +
-                "(tgltrn,               batch,              notrn,              noacc,              dc," +
-                "nominal,               stscetak,           kdtrnbuku,          trnke)" +
-                "VALUES " +
-                "('" + tgltrn + "'," + batch + "," + notrn + ",'" + noacc + "','" + dc + "'," +
-                nom_pok + ",'" + stscetak + "','" + kdtrnbuku + "'," + trnke + ")"
+            query = `INSERT INTO transpc 
+                (tgltrn,               batch,              notrn,              noacc,              dc,
+                nominal,               stscetak,           kdtrnbuku,          trnke)
+                VALUES 
+                ('${tgltrn}',           ${batch},          ${notrn},            '${noacc}',         '${dc}',
+                ${nom_pok},             '${stscetak}',     '${kdtrnbuku}',      ${trnke})`
             await exect(query)
         }
         return namadr
@@ -208,13 +212,17 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
 
         let tgl = await gettanggal()
         if (jnsdracc == "2") {
-            let query = "update m_tabunganc set mutasidr= mutasidr + " + nom_pok + ",trnke = trnke + 1,tgltrnakhir='" + tgl[0].tglsekarang + "',saldoakhir = saldoakhir - " + nom_pok + " where noacc ='" + dracc + "'";
+            let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                        saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
             await exect(query)
         }
 
         if (jnscracc == "2") {
             // proses kredit tabungan OY!
-            let query = "update m_tabunganc set mutasicr= mutasicr + " + nom_pok + ",trnke = trnke + 1,tgltrnakhir='" + tgl[0].tglsekarang + "',saldoakhir = saldoakhir + " + nom_pok + " where noacc ='" + cracc + "'";
+            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                        saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
             await exect(query)
         }
 
@@ -300,32 +308,32 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             namacr = inquericr[0].namaaccount
         }
         // ambil nomor transaksi per batch
-        let query = "select nomor + 10 as nomor from nomaster where batch='" + BATCH + "'"
+        let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
         hasil = await exect(query)
         notrn = hasil[0].nomor
         // update nomor transaksi per batch
-        query = "update nomaster set nomor =" + notrn + " where batch='" + BATCH + "'"
+        query = `update nomaster set nomor =${notrn} where batch=${BATCH}`
         await exect(query)
         // insert table transaksi
-        query = "INSERT INTO transaksi " +
-            "(tgltrn,           trnuser,            batch,          notrn,          kodetrn," +
-            "dracc,             drmodul,            cracc,          crmodul,        dc," +
-            "dokumen,           nominal,            tglval,         ket,            kodebpr," +
-            "kodecab,           kodeloc,            ststrn,         inpuser,        inptgljam," +
-            "inpterm,           prog,               groupno,        modul,          sbbperalihan_dr," +
-            "sbbperalihan_cr,   stscetak,           thnbln,         jnstrnlx,       jnstrntx," +
-            "trnke_dr,          trnke_cr,           stscetakcr,     kdaodr,         kdaocr," +
-            "kdkoldr,           kdkolcr,            kdtrnbuku,      depfrom,        depto," +
-            "namadr,            namacr) VALUES " +
-            "('" + tgltrn + "','" + trnuser + "'," + batch + "," + notrn + ",'" + kodetrn + "','" +
-            dracc + "','" + drmodul + "','" + cracc + "','" + crmodul + "','" + dc + "','" +
-            dokumen + "'," + nom_pok + ",'" + tglval + "','" + ket + "','" + kodebpr + "','" +
-            kodecab + "','" + kodeloc + "','" + ststrn + "','" + inpuser + "','" + inptgljam + "','" +
-            inpterm + "','" + prog + "'," + groupno + ",'" + modul + "','" + sbbperalihan_dr + "','" +
-            sbbperalihan_cr + "','" + stscetak + "','" + thnbln + "','" + jnstrnlx + "','" + jnstrntx + "'," +
-            trnke_dr + "," + trnke_cr + ",'" + stscetakcr + "','" + kdaodr + "','" + kdaocr + "','" +
-            kdkoldr + "','" + kdkolcr + "','" + kdtrnbuku + "','" + depfrom + "','" + depto + "','" +
-            namadr + "','" + namacr + "')"
+        query = `INSERT INTO transaksi 
+           (tgltrn,             trnuser,            batch,              notrn,              kodetrn,
+           dracc,               drmodul,            cracc,              crmodul,            dc,
+           dokumen,             nominal,            tglval,             ket,                kodebpr,
+           kodecab,             kodeloc,            ststrn,             inpuser,            inptgljam,
+           inpterm,             prog,               groupno,            modul,              sbbperalihan_dr,
+           sbbperalihan_cr,     stscetak,           thnbln,             jnstrnlx,           jnstrntx,
+           trnke_dr,            trnke_cr,           stscetakcr,         kdaodr,             kdaocr,
+           kdkoldr,             kdkolcr,            kdtrnbuku,          depfrom,            depto,
+           namadr,              namacr) VALUES 
+           ('${tgltrn}',        '${trnuser}',       ${batch},           ${notrn},           '${kodetrn}',
+           '${dracc}',          '${drmodul}',       '${cracc}',         '${crmodul}',       '${dc}',
+           '${dokumen}',        ${nom_pok},         '${tglval}',        '${ket}',           '${kodebpr}',
+           '${kodecab}',        '${kodeloc}',       '${ststrn}',        '${inpuser}',       '${inptgljam}',
+           '${inpterm}',        '${prog}',          ${groupno},         '${modul}',         '${sbbperalihan_dr}',
+           '${sbbperalihan_cr}','${stscetak}',      '${thnbln}',        '${jnstrnlx}',      '${jnstrntx}',
+           ${trnke_dr},         ${trnke_cr},        '${stscetakcr}',    '${kdaodr}',        '${kdaocr}',
+           '${kdkoldr}',        '${kdkolcr}',       '${kdtrnbuku}',     '${depfrom}',       '${depto}',
+           '${namadr}',         '${namacr}')`
 
         await exect(query)
         //    insert table transpc debet
@@ -333,12 +341,12 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             dc = "D"
             trnke = trnke_dr
             noacc = dracc
-            query = "INSERT INTO transpc " +
-                "(tgltrn,               batch,              notrn,              noacc,              dc," +
-                "nominal,               stscetak,           kdtrnbuku,          trnke)" +
-                "VALUES " +
-                "('" + tgltrn + "'," + batch + "," + notrn + ",'" + noacc + "','" + dc + "'," +
-                nom_pok + ",'" + stscetak + "','" + kdtrnbuku + "'," + trnke + ")"
+            query = `INSERT INTO transpc 
+                (tgltrn,               batch,              notrn,              noacc,              dc,
+                nominal,               stscetak,           kdtrnbuku,          trnke)
+                VALUES 
+                ('${tgltrn}',           ${batch},           ${notrn},          '${noacc}',          '${dc}',
+                ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
             await exect(query)
         }
 
@@ -346,12 +354,12 @@ async function trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1,
             dc = "C"
             trnke = trnke_cr
             noacc = cracc
-            query = "INSERT INTO transpc " +
-                "(tgltrn,               batch,              notrn,              noacc,              dc," +
-                "nominal,               stscetak,           kdtrnbuku,          trnke)" +
-                "VALUES " +
-                "('" + tgltrn + "'," + batch + "," + notrn + ",'" + noacc + "','" + dc + "'," +
-                nom_pok + ",'" + stscetak + "','" + kdtrnbuku + "'," + trnke + ")"
+            query = `INSERT INTO transpc 
+                (tgltrn,               batch,              notrn,              noacc,              dc,
+                nominal,               stscetak,           kdtrnbuku,          trnke)
+                VALUES 
+                ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
+                ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
             await exect(query)
         }
     }

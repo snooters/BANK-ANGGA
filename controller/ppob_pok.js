@@ -28,13 +28,17 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
 
         tgl = await gettanggal()
         if (jnsdracc == "2") {
-            let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
+            let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},
+            trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+            saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
             await exect(query)
         }
 
         if (jnscracc == "2") {
             // proses kredit tabungan OY!
-            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
+            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
+            trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+            saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
             await exect(query)
 
         }
@@ -132,24 +136,24 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
 
         // insert table transaksi
         query = `INSERT INTO transaksi 
-            (tgltrn,           trnuser,            batch,          notrn,          kodetrn,
-            dracc,             drmodul,            cracc,          crmodul,        dc,
-            dokumen,           nominal,            tglval,         ket,            kodebpr,
-            kodecab,           kodeloc,            ststrn,         inpuser,        inptgljam,
-            inpterm,           prog,               groupno,        modul,          sbbperalihan_dr,
-            sbbperalihan_cr,   stscetak,           thnbln,         jnstrnlx,       jnstrntx,
-            trnke_dr,          trnke_cr,           stscetakcr,     kdaodr,         kdaocr,
-            kdkoldr,           kdkolcr,            kdtrnbuku,      depfrom,        depto,
-            namadr,            namacr) VALUES 
-           ('${tgltrn}','${trnuser}',${BATCH},${notrn},'${kodetrn}',
-           '${dracc}','${drmodul}','${cracc}','${crmodul}','${dc}',
-            '${dokumen}',${nom_pok},'${tglval}','${ket}','${KD_BANK}',
-            '${KD_CAB}','${KD_LOC}','${ststrn}','${inpuser}','${inptgljam}',
-            '${inpterm}','${prog}',${groupno},'${modul}','${sbbperalihan_dr}',
-            '${sbbperalihan_cr}','${stscetak}','${thnbln}','${jnstrnlx}','${jnstrntx}',
-            ${trnke_dr},${trnke_cr},'${stscetakcr}','${kdaodr}','${kdaocr}',
-            '${kdkoldr}','${kdkolcr}','${kdtrnbuku}','${depfrom}','${depto}',
-            '${namadr}','${namacr}')`
+            (tgltrn,                trnuser,            batch,          notrn,          kodetrn,
+            dracc,                  drmodul,            cracc,          crmodul,        dc,
+            dokumen,                nominal,            tglval,         ket,            kodebpr,
+            kodecab,                kodeloc,            ststrn,         inpuser,        inptgljam,
+            inpterm,                prog,               groupno,        modul,          sbbperalihan_dr,
+            sbbperalihan_cr,        stscetak,           thnbln,         jnstrnlx,       jnstrntx,
+            trnke_dr,               trnke_cr,           stscetakcr,     kdaodr,         kdaocr,
+            kdkoldr,                kdkolcr,            kdtrnbuku,      depfrom,        depto,
+            namadr,                 namacr) VALUES 
+           ('${tgltrn}',            '${trnuser}',       ${BATCH},       ${notrn},       '${kodetrn}',
+           '${dracc}',              '${drmodul}',       '${cracc}',     '${crmodul}',   '${dc}',
+            '${dokumen}',           ${nom_pok},         '${tglval}',    '${ket}',       '${KD_BANK}',
+            '${KD_CAB}',            '${KD_LOC}',        '${ststrn}',    '${inpuser}',   '${inptgljam}',
+            '${inpterm}',           '${prog}',          ${groupno},     '${modul}',     '${sbbperalihan_dr}',
+            '${sbbperalihan_cr}',   '${stscetak}',      '${thnbln}',    '${jnstrnlx}',  '${jnstrntx}',
+            ${trnke_dr},            ${trnke_cr},        '${stscetakcr}','${kdaodr}',    '${kdaocr}',
+            '${kdkoldr}',           '${kdkolcr}',       '${kdtrnbuku}', '${depfrom}',   '${depto}',
+            '${namadr}',            '${namacr}')`
 
         await exect(query)
         if (jnsdracc == "2") {
@@ -158,11 +162,11 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
             trnke = trnke_dr
             noacc = dracc
             let query = `INSERT INTO transpc 
-                (tgltrn,               batch,              notrn,              noacc,              dc,
-                nominal,               stscetak,           kdtrnbuku,          trnke)
+                (tgltrn,                batch,              notrn,              noacc,              dc,
+                nominal,                stscetak,           kdtrnbuku,          trnke)
                 VALUES 
-                ('${tgltrn}',${batch},${notrn},'${noacc}','${dc}',
-                ${nom_pok},'${stscetak}','${kdtrnbuku}',${trnke})`
+                ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
+                ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
             await exect(query)
         }
 
@@ -171,11 +175,11 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
             trnke = trnke_cr
             noacc = cracc
             let query = `INSERT INTO transpc 
-                (tgltrn,               batch,              notrn,              noacc,              dc,
-                nominal,               stscetak,           kdtrnbuku,          trnke)
+                (tgltrn,                batch,              notrn,              noacc,              dc,
+                nominal,                stscetak,           kdtrnbuku,          trnke)
                 VALUES 
-                ('${tgltrn}',${BATCH},${notrn},'${noacc}','${dc}',
-                ${nom_pok},'${stscetak}','${kdtrnbuku}',${trnke})`
+                ('${tgltrn}',           ${BATCH},           ${notrn},           '${noacc}',         '${dc}',
+                ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
             await exect(query)
         }
         return namadr
@@ -191,13 +195,17 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
 
         if (jnsdracc == "2") {
             // proses debet tabungan nasabah
-            let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
+            let query = `update m_tabunganc set mutasidr= mutasidr + ${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                        saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
             await exect(query)
         }
 
         if (jnscracc == "2") {
             // proses kredit tabungan OY!
-            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
+            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+                        saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
             await exect(query)
         }
 
@@ -242,7 +250,7 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
             sbbperalihan_dr = dracc
         }
         if (jnscracc == "2") {
-            sbbperalihan_cr = cracc(0, 7) + "10" + inquericr[0].sbbtab
+            sbbperalihan_cr = cracc.substr(0, 7) + "10" + inquericr[0].sbbtab
         } else {
             sbbperalihan_cr = cracc
         }
@@ -292,24 +300,24 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
         await exect(query)
         // insert table transaksi
         query = `INSERT INTO transaksi 
-            (tgltrn,           trnuser,            batch,          notrn,          kodetrn,
-            dracc,             drmodul,            cracc,          crmodul,        dc,
-            dokumen,           nominal,            tglval,         ket,            kodebpr,
-            kodecab,           kodeloc,            ststrn,         inpuser,        inptgljam,
-            inpterm,           prog,               groupno,        modul,          sbbperalihan_dr,
-            sbbperalihan_cr,   stscetak,           thnbln,         jnstrnlx,       jnstrntx,
-            trnke_dr,          trnke_cr,           stscetakcr,     kdaodr,         kdaocr,
-            kdkoldr,           kdkolcr,            kdtrnbuku,      depfrom,        depto,
-            namadr,            namacr) VALUES 
-            ('${tgltrn}','${trnuser}',${batch},${notrn},'${kodetrn}',
-            '${dracc}','${drmodul}','${cracc}','${crmodul}','${dc}',
-            '${dokumen}',${nom_pok},'${tglval}','${ket}','${kodebpr}',
-            '${kodecab}','${kodeloc}','${ststrn}','${inpuser}','${inptgljam}',
-            '${inpterm}','${prog}',${groupno},'${modul}','${sbbperalihan_dr}',
-            '${sbbperalihan_cr}','${stscetak}','${thnbln}','${jnstrnlx}','${jnstrntx}',
-            ${trnke_dr},${trnke_cr},'${stscetakcr}','${kdaodr}','${kdaocr}',
-            '${kdkoldr}','${kdkolcr}','${kdtrnbuku}','${depfrom}','${depto}',
-            '${namadr}','${namacr}')`
+            (tgltrn,                trnuser,            batch,          notrn,          kodetrn,
+            dracc,                  drmodul,            cracc,          crmodul,        dc,
+            dokumen,                nominal,            tglval,         ket,            kodebpr,
+            kodecab,                kodeloc,            ststrn,         inpuser,        inptgljam,
+            inpterm,                prog,               groupno,        modul,          sbbperalihan_dr,
+            sbbperalihan_cr,        stscetak,           thnbln,         jnstrnlx,       jnstrntx,
+            trnke_dr,               trnke_cr,           stscetakcr,     kdaodr,         kdaocr,
+            kdkoldr,                kdkolcr,            kdtrnbuku,      depfrom,        depto,
+            namadr,                 namacr) VALUES 
+            ('${tgltrn}',           '${trnuser}',       ${batch},       ${notrn},       '${kodetrn}',
+            '${dracc}',             '${drmodul}',       '${cracc}',     '${crmodul}',   '${dc}',
+            '${dokumen}',           ${nom_pok},         '${tglval}',    '${ket}',       '${kodebpr}',
+            '${kodecab}',           '${kodeloc}',       '${ststrn}',    '${inpuser}',   '${inptgljam}',
+            '${inpterm}',           '${prog}',          ${groupno},     '${modul}',     '${sbbperalihan_dr}',
+            '${sbbperalihan_cr}',   '${stscetak}',      '${thnbln}',    '${jnstrnlx}',  '${jnstrntx}',
+            ${trnke_dr},            ${trnke_cr},        '${stscetakcr}','${kdaodr}',    '${kdaocr}',
+            '${kdkoldr}',           '${kdkolcr}',       '${kdtrnbuku}', '${depfrom}',   '${depto}',
+            '${namadr}',            '${namacr}')`
 
         await exect(query)
         if (jnsdracc == "2") {
@@ -318,11 +326,11 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
             trnke = trnke_dr
             noacc = dracc
             let query = `INSERT INTO transpc 
-            (tgltrn,               batch,              notrn,              noacc,              dc,
-            nominal,               stscetak,           kdtrnbuku,          trnke)
+            (tgltrn,                batch,              notrn,              noacc,              dc,
+            nominal,                stscetak,           kdtrnbuku,          trnke)
             VALUES 
-            ('${tgltrn}',${batch},${notrn},'${noacc}','${dc}',
-            ${nom_pok}, '${stscetak}', '${kdtrnbuku}', ${trnke}) `
+            ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
+            ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke}) `
             await exect(query)
         }
 
@@ -331,11 +339,11 @@ async function pokppob(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl
             trnke = trnke_cr
             noacc = cracc
             let query = `INSERT INTO transpc 
-                        (tgltrn,                batch,              notrn,              noacc,                  dc, 
-                        nominal,                stscetak,           kdtrnbuku,          trnke)
+            (tgltrn,                batch,              notrn,              noacc,                  dc, 
+            nominal,                stscetak,           kdtrnbuku,          trnke)
             VALUES 
-            ('${tgltrn}',${batch},${notrn},'${noacc}','${dc}',
-            ${nom_pok}, '${stscetak}', '${kdtrnbuku}', ${trnke}) `
+            ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',             '${dc}',
+            ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke}) `
             await exect(query)
         }
     }

@@ -117,6 +117,7 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == PPOB) {
+        getprint("PPOB REQ", req.body);
 
         /* check status rekening debet */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)

@@ -167,7 +167,7 @@ async function token_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, 
            kdkoldr,                 kdkolcr,            kdtrnbuku,      depfrom,        depto,
            namadr,                  namacr) VALUES 
            ('${tgltrn}',            '${trnuser}',       ${batch},       ${notrn},       '${kodetrn}',
-           '${dracc}',              ${drmodul}',        '${cracc}',     '${crmodul}',   '${dc}',
+           '${dracc}',              '${drmodul}',        '${cracc}',     '${crmodul}',   '${dc}',
            '${dokumen}',            ${nom_pok},         '${tglval}',    '${ket}',       '${kodebpr}',
            '${kodecab}',            '${kodeloc}',       '${ststrn}',    '${inpuser}',   '${inptgljam}',
            '${inpterm}',            '${prog}',          ${groupno},     '${modul}',     '${sbbperalihan_dr}',

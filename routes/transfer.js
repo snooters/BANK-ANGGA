@@ -113,6 +113,7 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == Transfer_In) {
+        getprint("TRANSFER IN REQ", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
@@ -203,6 +204,7 @@ router.post('/', async (req, res) => {
 
     } else if (trx_code == Transfer_Out) {
 
+        getprint("TRANSFER OUT REQ", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
@@ -294,6 +296,7 @@ router.post('/', async (req, res) => {
 
     } else if (trx_code == Pindah_Buku) {
 
+        getprint("PINDAH BUKU REQ", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {

@@ -123,7 +123,7 @@ router.post('/', async (req, res) => {
     };
 
     if (trx_code == Req_Token_Tarik_Tunai) {
-
+        getprint("TOKEN REQ", req.body)
         /* Checking the status of the account number. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
@@ -218,7 +218,7 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Release_Tarik_Tunai) {
-
+        getprint("release REQ", req.body)
         if (Object.keys(data.on_us).length != 0) {
             datatemp = data.on_us
         } else if (Object.keys(data.issuer).length != 0) {

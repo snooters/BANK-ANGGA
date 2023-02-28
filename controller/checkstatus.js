@@ -70,13 +70,16 @@ async function checkstatus(noacc, jns_id, nominal, rrn) {
                 data: null
             }
         } else if (stsrec == "A") {
+
             if (nominal > (saldoeff)) {
-                result = {
-                    code: saldo_kurang,
-                    status: "GAGAL",
-                    message: "SALDO TIDAK CUKUP",
-                    rrn: rrn,
-                    data: null
+                if (nominal > 0) {
+                    result = {
+                        code: saldo_kurang,
+                        status: "GAGAL",
+                        message: "SALDO TIDAK CUKUP",
+                        rrn: rrn,
+                        data: null
+                    }
                 }
             } else if (stsblok == "R") {
                 result = {

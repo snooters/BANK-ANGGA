@@ -174,9 +174,19 @@ router.post('/', async (req, res) => {
             if (Object.keys(hasil).length != 0) {
                 let stsrec = hasil[0].stsrec
                 let stsblok = hasil[0].stsblok
-                let nama_rek = hasil[0].nama
+                let nama_rek
+                if (gl_jns == "2") {
+                    nama_rek = hasil[0].fnama
+                } else {
+                    nama_rek = hasil[0].namaaccount
+                }
                 let saldoakhir = hasil[0].saldoakhir
-                let saldoeff = hasil[0].saldoeff
+                let saldoeff
+                if (gl_jns == "1") {
+                    saldoeff = saldoakhir
+                } else {
+                    saldoeff = hasil[0].saldoeff
+                }
                 let sts
                 await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
                     0, "", "", 0, "", "", 0, Successful)

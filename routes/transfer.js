@@ -173,7 +173,7 @@ router.post('/', async (req, res) => {
                 tgl_trans: tgl_trans,
                 tgl_transmis: tgl_transmis,
                 no_rek: gl_rek_db_1,
-                nama_rek: nama_rekdr,
+                nama: nama_rekdr,
                 noreff: tgl_trans.substr(0, 8) + rrn,
                 status_rek: "AKTIF"
             }

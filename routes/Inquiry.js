@@ -92,7 +92,7 @@ router.post('/', async (req, res) => {
                         tgl_transmis: tgl_transmis,
                         rrn: rrn,
                         no_rek: no_rek,
-                        nama_rek: hasil[0].nmsbb,
+                        nama: hasil[0].nmsbb,
                         status_rek: sts
                     }
                 }
@@ -128,7 +128,7 @@ router.post('/', async (req, res) => {
                         tgl_transmis: tgl_transmis,
                         rrn: rrn,
                         no_rek: no_rek,
-                        nama_rek: hasil[0].fnama,
+                        nama: hasil[0].fnama,
                         status_rek: sts
                     }
                 }
@@ -175,11 +175,11 @@ router.post('/', async (req, res) => {
             if (Object.keys(hasil).length != 0) {
                 let stsrec = hasil[0].stsrec
                 let stsblok = hasil[0].stsblok
-                let nama_rek
+                let nama
                 if (gl_jns == "2") {
-                    nama_rek = hasil[0].fnama
+                    nama = hasil[0].fnama
                 } else {
-                    nama_rek = hasil[0].namaaccount
+                    nama = hasil[0].namaaccount
                 }
                 let saldoakhir = hasil[0].saldoakhir
                 let saldoeff
@@ -214,7 +214,7 @@ router.post('/', async (req, res) => {
                 }
                 value.push({
                     no_rek: no_rek,
-                    nama_rek: nama_rek,
+                    nama: nama,
                     saldoakhir: saldoakhir,
                     saldoeff: saldoeff,
                     status_rek: sts
@@ -222,7 +222,7 @@ router.post('/', async (req, res) => {
             } else {
                 value.push({
                     no_rek: no_rek,
-                    nama_rek: "Not Found",
+                    nama: "Not Found",
                     saldoakhir: "Not Found",
                     saldoeff: "Not Found",
                     status_rek: "REK SALAH"

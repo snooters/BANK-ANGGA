@@ -309,7 +309,7 @@ router.post('/', async (req, res) => {
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
         if (req.body.bpr_id !== "600998") {
-            getprint("RESPONSE RELEASE RELEASE TOKEN ", {
+            getprint("RESPONSE RELEASE TOKEN ", {
                 code: Successful,
                 status: "SUKSES",
                 message: "SUKSES",
@@ -351,7 +351,7 @@ router.post('/', async (req, res) => {
             });
         } else {
             if (trx_type == "REV") {
-                getprint("RESPONSE RELEASE RELEASE TOKEN ", {
+                getprint("RESPONSE RELEASE TOKEN ", {
                     code: Successful,
                     status: "SUKSES",
                     message: "SUKSES",

@@ -123,7 +123,7 @@ router.post('/', async (req, res) => {
     };
 
     if (trx_code == Req_Token_Tarik_Tunai) {
-        getprint("TOKEN REQ", req.body)
+        getprint("REQUEST TOKEN", req.body)
         /* Checking the status of the account number. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
@@ -132,7 +132,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
-            getprint("REQUEST TOKEN", valdr)
+            getprint("RESPONSE TOKEN", valdr)
 
             return res.status(200).send(
                 valdr
@@ -146,7 +146,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
 
-            getprint("REQUEST TOKEN", valcr1)
+            getprint("RESPONSE TOKEN", valcr1)
 
             return res.status(200).send(
                 valcr1
@@ -160,7 +160,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
 
-            getprint("REQUEST TOKEN", valcr2)
+            getprint("RESPONSE TOKEN", valcr2)
 
             return res.status(200).send(
                 valcr2
@@ -175,7 +175,7 @@ router.post('/', async (req, res) => {
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
-        getprint("REQUEST TOKEN", {
+        getprint("RESPONSE TOKEN", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -218,7 +218,7 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Release_Tarik_Tunai) {
-        getprint("release REQ", req.body)
+        getprint("REQUEST RELEASE TOKEN", req.body)
         if (Object.keys(data.on_us).length != 0) {
             datatemp = data.on_us
         } else if (Object.keys(data.issuer).length != 0) {
@@ -239,7 +239,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
-            getprint("RELEASE TOKEN", valdr)
+            getprint("RESPONSE RELEASE TOKEN", valdr)
 
             return res.status(200).send(
                 valdr
@@ -253,7 +253,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
 
-            getprint("RELEASE TOKEN", valcr1)
+            getprint("RESPONSE RELEASE TOKEN", valcr1)
 
             return res.status(200).send(
                 valcr1
@@ -267,7 +267,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
 
-            getprint("RELEASE TOKEN", valcr2)
+            getprint("RESPONSE RELEASE TOKEN", valcr2)
 
             return res.status(200).send(
                 valcr2
@@ -281,7 +281,7 @@ router.post('/', async (req, res) => {
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
-        getprint("RELEASE TARIK TUNAI ", {
+        getprint("RESPONSE RELEASE TARIK TUNAI ", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -325,7 +325,7 @@ router.post('/', async (req, res) => {
 
 
     } else {
-        getprint("TARIK TUNAI", {
+        getprint("RESPONSE RELEASE TOKEN", {
             code: invelid_transaction,
             status: "GAGAL",
             message: "Transaksi tidak ditemukan",

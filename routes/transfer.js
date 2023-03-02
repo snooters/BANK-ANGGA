@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
 
     let close_atm = await stsclose()
     if (close_atm !== "OPEN") {
-        getprint("TRANSFER", "SERVER SEDANG CLOSING")
+        getprint("RESPONSE TRANSFER", "SERVER SEDANG CLOSING")
         return res.status(200).send({
             code: "089",
             status: "GAGAL",
@@ -78,7 +78,7 @@ router.post('/', async (req, res) => {
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
 
-        getprint("REQ TOKEN", "TRX_TYPE SALAH")
+        getprint("RESPONSE TRANSFER", "TRX_TYPE SALAH")
 
         return res.status(200).send({
             code: invelid_transaction,
@@ -94,7 +94,7 @@ router.post('/', async (req, res) => {
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
         if (hasil !== "ADA") {
-            getprint("REV TRANSFER", {
+            getprint("RESPONSE REV TRANSFER", {
                 code: invelid_transaction,
                 status: "GAGAL",
                 message: "Transaksi tidak ditemukan",
@@ -113,14 +113,14 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == Transfer_In) {
-        getprint("TRANSFER IN REQ", req.body)
+        getprint("REQUEST TRANSFER IN", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
 
-            getprint("TRANSFER IN", valdr)
+            getprint("RESPONSE TRANSFER IN", valdr)
 
             return res.status(200).send(
                 valdr
@@ -133,7 +133,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr1).length !== 0) {
 
-            getprint("TRANSFER IN", valcr1)
+            getprint("RESPONSE TRANSFER IN", valcr1)
 
             return res.status(200).send(
                 valcr1
@@ -146,7 +146,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr2).length !== 0) {
 
-            getprint("TRANSFER IN", valcr2)
+            getprint("RESPONSE TRANSFER IN", valcr2)
 
             return res.status(200).send(
                 valcr2
@@ -161,7 +161,7 @@ router.post('/', async (req, res) => {
         }
 
 
-        getprint("TRANSFER IN", {
+        getprint("RESPONSE TRANSFER IN", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -204,14 +204,14 @@ router.post('/', async (req, res) => {
 
     } else if (trx_code == Transfer_Out) {
 
-        getprint("TRANSFER OUT REQ", req.body)
+        getprint("REQUEST TRANSFER OUT", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
 
-            getprint("TRANSFER OUT", valdr)
+            getprint("RESPONSE TRANSFER OUT", valdr)
 
             return res.status(200).send(
                 valdr
@@ -224,7 +224,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr1).length !== 0) {
 
-            getprint("TRANSFER OUT", valcr1)
+            getprint("RESPONSE TRANSFER OUT", valcr1)
 
             return res.status(200).send(
                 valcr1
@@ -237,7 +237,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr2).length !== 0) {
 
-            getprint("TRANSFER OUT", valcr2)
+            getprint("RESPONSE TRANSFER OUT", valcr2)
 
             return res.status(200).send(
                 valcr2
@@ -252,7 +252,7 @@ router.post('/', async (req, res) => {
         }
 
 
-        getprint("TRANSFER OUT", {
+        getprint("RESPONSE TRANSFER OUT", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -296,14 +296,14 @@ router.post('/', async (req, res) => {
 
     } else if (trx_code == Pindah_Buku) {
 
-        getprint("PINDAH BUKU REQ", req.body)
+        getprint("REQUEST PINDAH BUKU", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
 
-            getprint("PINDAH BUKU", valdr)
+            getprint("RESPONSE PINDAH BUKU", valdr)
 
             return res.status(200).send(
                 valdr
@@ -316,7 +316,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr1).length !== 0) {
 
-            getprint("PINDAH BUKU", valcr1)
+            getprint("RESPONSE PINDAH BUKU", valcr1)
 
             return res.status(200).send(
                 valcr1
@@ -329,7 +329,7 @@ router.post('/', async (req, res) => {
 
         } else if (Object.keys(valcr2).length !== 0) {
 
-            getprint("PINDAH BUKU", valcr2)
+            getprint("RESPONSE PINDAH BUKU", valcr2)
             return res.status(200).send(
                 valcr2
             )
@@ -343,7 +343,7 @@ router.post('/', async (req, res) => {
         }
 
 
-        getprint("PINDAH BUKU", {
+        getprint("RESPONSE PINDAH BUKU", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -385,7 +385,7 @@ router.post('/', async (req, res) => {
 
 
     } else {
-        getprint("TRANSFER", "TRX_CODE SALAH")
+        getprint("RESPONSE TRANSFER", "TRX_CODE SALAH")
         return res.status(200).send({
             code: invelid_transaction,
             status: "GAGAL",

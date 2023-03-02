@@ -58,6 +58,8 @@ router.post('/', async (req, res) => {
     let value = []
     // inquiry account name
     if (trx_code == Inquiry_Account) {
+        getprint("REQUEST ACCOUNT INQUIRY", req.body)
+
         await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", gl_jns, 0, "", "",
             0, "", "", 0, "", "", 0, "")
 
@@ -133,8 +135,7 @@ router.post('/', async (req, res) => {
             }
             await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
                 0, "", "", 0, "", "", 0, Successful)
-            getprint("ACCOUNT INQUIRY REQ", req.body)
-            getprint("ACCOUNT INQUIRY RES", senddata)
+            getprint("RESPONSE ACCOUNT INQUIRY", senddata)
             return res.status(200).send(
                 senddata
             );
@@ -150,8 +151,8 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, "", no_rek, 0, 0, tgl_trans, tgl_transmis, "", rrn, "", "", 0, "", "",
                 0, "", "", 0, "", "", 0, Successful)
 
-            getprint("ACCOUNT INQUIRY REQ", req.body)
-            getprint("ACCOUNT INQUIRY RES", senddata)
+            //getprint("ACCOUNT INQUIRY REQ", req.body)
+            getprint("RESPONSE ACCOUNT INQUIRY", senddata)
 
             return res.status(200).send({
                 code: invelid_transaction,
@@ -164,7 +165,7 @@ router.post('/', async (req, res) => {
 
         // get balance account
     } else if (trx_code == Inquiry_Balance) {
-
+        getprint("REQUEST BALANCE INQUIRY", req.body)
         for (i in data) {
             let no_rek = data[i].no_rek
             let gl_jns = data[i].gl_jns
@@ -242,8 +243,7 @@ router.post('/', async (req, res) => {
             }
         }
 
-        getprint("ACCOUNT INQUIRY REQ", req.body)
-        getprint("BALANCE INQUIRY RES", senddata)
+        getprint("RESPONSE BALANCE INQUIRY", senddata)
         return res.status(200).send({
             code: Successful,
             status: "SUKSES",

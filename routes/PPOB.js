@@ -117,7 +117,7 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == PPOB) {
-        getprint("PPOB REQ", req.body);
+        getprint("REQUEST PPOB", req.body);
 
         /* check status rekening debet */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
@@ -127,7 +127,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
-            getprint("PPOB", valdr);
+            getprint("RESPONSE PPOB", valdr);
 
             return res.status(200).send(
                 valdr
@@ -142,7 +142,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
 
-            getprint("PPOB", valcr1);
+            getprint("RESPONSE PPOB", valcr1);
 
             return res.status(200).send(
                 valcr1
@@ -157,7 +157,7 @@ router.post('/', async (req, res) => {
             await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
 
-            getprint("PPOB", valcr2);
+            getprint("RESPONSE PPOB", valcr2);
 
             return res.status(200).send(
                 valcr2
@@ -174,7 +174,7 @@ router.post('/', async (req, res) => {
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
 
-        getprint("PPOB", {
+        getprint("RESPONSE PPOB", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",
@@ -218,7 +218,7 @@ router.post('/', async (req, res) => {
             });
 
     } else {
-        getprint("PPOB", "TRX_CODE SALAH")
+        getprint("RESPONSE PPOB", "TRX_CODE SALAH")
         return res.status(200).send({
             code: invelid_transaction,
             status: "GAGAL",

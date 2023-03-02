@@ -30,7 +30,7 @@ const {
     KD_LOC
 } = process.env;
 
-async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, product_name, rrn) {
+async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan, rrn) {
     // proses TRX
     if (trx_type == "TRX") {
         dracc = gl_rek_db_2;
@@ -76,7 +76,7 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         dokumen = tgltrn + rrn
         // nominal = nominal
         tglval = tgltrn
-        ket = product_name
+        ket = keterangan
         kodebpr = KD_BANK
         kodecab = KD_CAB
         kodeloc = KD_LOC
@@ -235,7 +235,7 @@ async function token_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, 
         dokumen = tgltrn + rrn
         // nominal = nominal
         tglval = tgltrn
-        ket = product_name
+        ket = keterangan
         kodebpr = KD_BANK
         kodecab = KD_CAB
         kodeloc = KD_LOC

@@ -252,7 +252,7 @@ async function token_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, 
         dokumen = tgltrn + rrn
         // nominal = nominal
         tglval = tgltrn
-        ket = product_name
+        ket = keterangan
         kodebpr = KD_BANK
         kodecab = KD_CAB
         kodeloc = KD_LOC

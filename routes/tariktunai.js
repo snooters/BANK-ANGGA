@@ -67,45 +67,18 @@ router.post('/', async (req, res) => {
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2,
         gl_jns_cr_2, gl_amount_cr_2 } = data
 
-    if (trx_type == "REV") {
-        let hasil = await check_rev(bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
-
-        if (hasil !== "ADA") {
-            getprint("REV TARIK TUNAI", {
-                code: invelid_transaction,
-                status: "GAGAL",
-                message: "Transaksi tidak ditemukan",
-                rrn: rrn,
-                data: null
-            });
-
-            return res.status(200).send({
-                code: invelid_transaction,
-                status: "GAGAL",
-                message: "Transaksi tidak ditemukan",
-                rrn: rrn,
-                data: null
-            });
-        }
-    }
-
-    await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-        gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
-
-
 
     const myArray = ["TRX", "REV"]
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
 
         /* A function that is called when the transaction type is invalid. */
-        getprint("REQ TOKEN", "TRX_TYPE SALAH")
+        getprint("RESPONSE TOKEN", "TRX_TYPE SALAH")
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, invelid_transaction)
 
 
-        getprint("PPOB", {
+        getprint("RESPONSE TARIK TUNAI", {
             code: invelid_transaction,
             status: "GAGAL",
             message: "TRX_TYPE SALAH",
@@ -123,6 +96,34 @@ router.post('/', async (req, res) => {
     };
 
     if (trx_code == Req_Token_Tarik_Tunai) {
+
+        if (trx_type == "REV") {
+            let hasil = await check_rev(bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+            if (hasil !== "ADA") {
+                getprint("REV TARIK TUNAI", {
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+
+                return res.status(200).send({
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+            }
+        }
+
+        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
+
         getprint("REQUEST TOKEN", req.body)
         /* Checking the status of the account number. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
@@ -231,6 +232,32 @@ router.post('/', async (req, res) => {
         let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2,
             gl_jns_cr_2, gl_amount_cr_2 } = datatemp
 
+        if (trx_type == "REV") {
+            let hasil = await check_rev(bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+            if (hasil !== "ADA") {
+                getprint("RESPONSE REV TARIK TUNAI", {
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+
+                return res.status(200).send({
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+            }
+        }
+
+        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
         /* Checking the status of the account number. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
@@ -281,7 +308,7 @@ router.post('/', async (req, res) => {
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
-        getprint("RESPONSE RELEASE TARIK TUNAI ", {
+        getprint("RESPONSE RELEASE RELEASE TOKEN ", {
             code: Successful,
             status: "SUKSES",
             message: "SUKSES",

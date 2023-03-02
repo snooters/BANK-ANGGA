@@ -249,7 +249,7 @@ async function trf_out_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
         crmodul = jnscracc
         dc = ""
         dokumen = tgltrn + rrn
-        nominal = nominal
+        // nominal = nominal
         tglval = tgltrn
         ket = product_name
         kodebpr = KD_BANK

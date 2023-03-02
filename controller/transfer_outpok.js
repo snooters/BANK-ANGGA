@@ -87,7 +87,7 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
         inpuser = USER_ID
         jam = new Date()
         inptgljam = tgltrn + jam.getHours() + jam.getMinutes() + jam.getSeconds()
-        inpterm = "transferout"
+        inpterm = "trfout"
         prog = "w_trf"
         groupno = 0
         modul = ""
@@ -248,7 +248,7 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
         inpuser = USER_ID
         jam = new Date()
         inptgljam = tgltrn + jam.getHours() + jam.getMinutes() + jam.getSeconds()
-        inpterm = "transferout"
+        inpterm = "trfout"
         prog = "w_trf"
         groupno = 0
         modul = ""

@@ -307,7 +307,7 @@ router.post('/', async (req, res) => {
         }
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
-        if (RegExp.boy.bpr_id !== "600998") {
+        if (req.body.bpr_id !== "600998") {
             getprint("RESPONSE RELEASE RELEASE TOKEN ", {
                 code: Successful,
                 status: "SUKSES",

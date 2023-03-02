@@ -90,7 +90,7 @@ async function pindahbuku_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_c
         inpuser = USER_ID
         jam = new Date()
         inptgljam = tgltrn + jam.getHours() + jam.getMinutes() + jam.getSeconds()
-        inpterm = "trf"
+        inpterm = "pindahbuku"
         prog = "w_trf"
         groupno = 0
         modul = ""
@@ -253,8 +253,8 @@ async function pindahbuku_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_c
         inpuser = USER_ID
         jam = new Date()
         inptgljam = tgltrn + jam.getHours() + jam.getMinutes() + jam.getSeconds()
-        inpterm = "PPOB"
-        prog = "w_ppob"
+        inpterm = "pindahbuku"
+        prog = "w_trf"
         groupno = 0
         modul = ""
         if (jnsdracc == "2") {

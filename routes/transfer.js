@@ -74,6 +74,7 @@ router.post('/', async (req, res) => {
     let { trx_code, trx_type, bpr_id, nama_bpr_id, no_rek, nama_rek, bank_tujuan, rek_tujuan, nama_tujuan, amount, trans_fee, keterangan, tgl_trans, tgl_transmis, rrn, data } = req.body
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data
 
+
     const myArray = ["TRX", "REV"]
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
@@ -113,6 +114,9 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == Transfer_In) {
+        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
         getprint("REQUEST TRANSFER IN", req.body)
         /* Checking the status of the account. */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
@@ -203,6 +207,8 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Transfer_Out) {
+        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
         getprint("REQUEST TRANSFER OUT", req.body)
         /* Checking the status of the account. */
@@ -295,6 +301,9 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Pindah_Buku) {
+        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
+
 
         getprint("REQUEST PINDAH BUKU", req.body)
         /* Checking the status of the account. */

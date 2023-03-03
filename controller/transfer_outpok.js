@@ -205,16 +205,16 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
 
         let tgl = await gettanggal()
         if (jnsdracc == "2") {
-            let query = `update m_tabunganc set mutasidr= mutasidr +${nom_pok},
-                        trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
+            query = `update m_tabunganc set mutasidr = mutasidr +${nom_pok},
+                        trnke = trnke + 1,tgltrnakhir ='${tgl[0].tglsekarang}',
                         saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
             await exect(query)
         }
 
         if (jnscracc == "2") {
-            query = `update m_tabunganc set mutasicr= mutasicr +${nom_pok},
+            query = `update m_tabunganc set mutasicr = mutasicr + ${nom_pok},
                     trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
-                    saldoakhir = saldoakhir +${nom_pok} where noacc ='${cracc}'`
+                    saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
             await exect(query)
         }
 

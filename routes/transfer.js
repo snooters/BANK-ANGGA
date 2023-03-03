@@ -13,6 +13,7 @@ const { pindahbuku_fee } = require('../controller/pindahbuku_fee');
 const { pindahbuku_pok } = require('../controller/pindahbuku_pok');
 const { stsclose } = require('../controller/closeatm');
 const { check_rev } = require('../controller/check_rev');
+const { insertlog } = require('../controller/insertlog');
 const v = new Validator();
 
 const {
@@ -114,7 +115,7 @@ router.post('/', async (req, res) => {
     }
 
     if (trx_code == Transfer_In) {
-        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+        await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
         getprint("REQUEST TRANSFER IN", req.body)
@@ -207,7 +208,7 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Transfer_Out) {
-        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+        await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
         getprint("REQUEST TRANSFER OUT", req.body)
@@ -301,7 +302,7 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Pindah_Buku) {
-        await insertlog("REQ", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+        await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
 

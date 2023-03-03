@@ -29,6 +29,7 @@ const { str,
     KD_CAB,
     KD_LOC, } = process.env;
 let hasil
+let querystr
 
 async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, product_name) {
     // proses TRX
@@ -41,17 +42,17 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
 
         tgl = await gettanggal()
         if (jnsdracc == "2") {
-            let query = `update m_tabunganc set mutasidr= mutasidr +${nom_pok},
+            querystr = `update m_tabunganc set mutasidr= mutasidr +${nom_pok},
                         trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
                         saldoakhir = saldoakhir -${nom_pok} where noacc ='${dracc}'`
-            await exect(query)
+            await exect(querystr)
         }
 
         if (jnscracc == "2") {
-            let query = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
+            querystr = `update m_tabunganc set mutasicr= mutasicr + ${nom_pok},
                         trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
                         saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
-            await exect(query)
+            await exect(querystr)
 
         }
 
@@ -138,16 +139,16 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
             namacr = inquericr[0].namaaccount
         }
         // ambil nomor transaksi per batch
-        let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
-        hasil = await exect(query)
+        querystr = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
+        hasil = await exect(querystr)
 
         notrn = hasil[0].nomor
         // update nomor transaksi per batch
-        query = `update nomaster set nomor =${notrn} where batch=${BATCH}`
-        await exect(query)
+        querystr = `update nomaster set nomor =${notrn} where batch=${BATCH}`
+        await exect(querystr)
 
         // insert table transaksi
-        query = `INSERT INTO transaksi 
+        querystr = `INSERT INTO transaksi 
             (tgltrn,                trnuser,            batch,              notrn,          kodetrn,
             dracc,                  drmodul,            cracc,              crmodul,        dc,
             dokumen,                nominal,            tglval,             ket,            kodebpr,
@@ -167,32 +168,32 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
             '${kdkoldr}',           '${kdkolcr}',       '${kdtrnbuku}',     '${depfrom}',   '${depto}',
             '${namadr}',            '${namacr}')`
 
-        await exect(query)
+        await exect(querystr)
 
         if (jnsdracc == "2") {
             dc = "D"
             trnke = trnke_dr
             noacc = dracc
-            query = `INSERT INTO transpc 
+            querystr = `INSERT INTO transpc 
                 (tgltrn,               batch,              notrn,              noacc,              dc,
                 nominal,               stscetak,           kdtrnbuku,          trnke)
                 VALUES 
                 ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
                 ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
-            await exect(query)
+            await exect(querystr)
         }
 
         if (jnscracc == "2") {
             dc = "C"
             trnke = trnke_cr
             noacc = cracc
-            query = `INSERT INTO transpc 
+            querystr = `INSERT INTO transpc 
                 (tgltrn,               batch,              notrn,              noacc,              dc,
                 nominal,               stscetak,           kdtrnbuku,          trnke)
                 VALUES 
                 ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
                 ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
-            await exect(query)
+            await exect(querystr)
         }
         return namadr
 
@@ -205,17 +206,17 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
 
         let tgl = await gettanggal()
         if (jnsdracc == "2") {
-            query = `update m_tabunganc set mutasidr = mutasidr +${nom_pok},
+            querystr = `update m_tabunganc set mutasidr = mutasidr +${nom_pok},
                         trnke = trnke + 1,tgltrnakhir ='${tgl[0].tglsekarang}',
                         saldoakhir = saldoakhir - ${nom_pok} where noacc ='${dracc}'`
-            await exect(query)
+            await exect(querystr)
         }
 
         if (jnscracc == "2") {
-            query = `update m_tabunganc set mutasicr = mutasicr + ${nom_pok},
+            querystr = `update m_tabunganc set mutasicr = mutasicr + ${nom_pok},
                     trnke = trnke + 1,tgltrnakhir='${tgl[0].tglsekarang}',
                     saldoakhir = saldoakhir + ${nom_pok} where noacc ='${cracc}'`
-            await exect(query)
+            await exect(querystr)
         }
 
         let inqueridr = await getsaldoacct(dracc, jnsdracc)
@@ -301,12 +302,12 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
         } else {
             namacr = inquericr[0].namaaccount
         }
-        let query = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
-        hasil = await exect(query)
+        querystr = `select nomor + 10 as nomor from nomaster where batch=${BATCH}`
+        hasil = await exect(querystr)
         notrn = hasil[0].nomor
-        query = `update nomaster set nomor =${notrn} where batch=${BATCH}`
-        await exect(query)
-        query = `INSERT INTO transaksi 
+        querystr = `update nomaster set nomor =${notrn} where batch=${BATCH}`
+        await exect(querystr)
+        querystr = `INSERT INTO transaksi 
             (tgltrn,                trnuser,            batch,              notrn,          kodetrn,
             dracc,                  drmodul,            cracc,              crmodul,        dc,
             dokumen,                nominal,            tglval,             ket,            kodebpr,
@@ -326,31 +327,31 @@ async function trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
             '${kdkoldr}',           '${kdkolcr}',       '${kdtrnbuku}',     '${depfrom}',   '${depto}',
             '${namadr}',            '${namacr}')`
 
-        await exect(query)
+        await exect(querystr)
         if (jnsdracc == "2") {
             dc = "D"
             trnke = trnke_dr
             noacc = dracc
-            query = `INSERT INTO transpc 
+            querystr = `INSERT INTO transpc 
                 (tgltrn,               batch,              notrn,              noacc,              dc,
                 nominal,               stscetak,           kdtrnbuku,          trnke)
                 VALUES 
                 ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
                 ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
-            await exect(query)
+            await exect(querystr)
         }
 
         if (jnscracc == "2") {
             dc = "C"
             trnke = trnke_cr
             noacc = cracc
-            query = `INSERT INTO transpc 
+            querystr = `INSERT INTO transpc 
                 (tgltrn,               batch,              notrn,              noacc,              dc,
                 nominal,               stscetak,           kdtrnbuku,          trnke)
                 VALUES 
                 ('${tgltrn}',           ${batch},           ${notrn},           '${noacc}',         '${dc}',
                 ${nom_pok},             '${stscetak}',      '${kdtrnbuku}',     ${trnke})`
-            await exect(query)
+            await exect(querystr)
         }
     }
     return namadr

@@ -348,8 +348,8 @@ async function trf_out_fee(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1
                 (tgltrn,                batch,                  notrn,              noacc,              dc,
                 nominal,                stscetak,               kdtrnbuku,          trnke)
                 VALUES 
-                ('${tgltrn}',           ${batch},               ${notrn},'          ${noacc}','        ${dc}',     
-                ${nom_pok},'            ${stscetak}','          ${kdtrnbuku}',      ${trnke}         )`
+                ('${tgltrn}',           ${batch},               ${notrn},           '${noacc}',         '${dc}',     
+                ${nom_pok},             '${stscetak}',           '${kdtrnbuku}',      ${trnke}         )`
             await exect(query)
         }
 

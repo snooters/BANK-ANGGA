@@ -61,6 +61,7 @@ router.post('/', async (req, res) => {
             .json(validate);
     }
 
+    /** PROSES PENGECEKAN STATUS SERVER SEDANG CLOSING ATAU TIDAK   **/
 
     let close_atm = await stsclose()
     if (close_atm !== "OPEN") {
@@ -75,7 +76,7 @@ router.post('/', async (req, res) => {
     let { trx_code, trx_type, bpr_id, nama_bpr_id, no_rek, nama_rek, bank_tujuan, rek_tujuan, nama_tujuan, amount, trans_fee, keterangan, tgl_trans, tgl_transmis, rrn, data } = req.body
     let { gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2 } = data
 
-
+    /** PENGECEKAN TRX_TYPE  **/
     const myArray = ["TRX", "REV"]
     const isNotInArray = !myArray.includes(trx_type);
     if (isNotInArray) {
@@ -91,39 +92,48 @@ router.post('/', async (req, res) => {
         });
     };
 
-    if (trx_type == "REV") {
-        let hasil = await check_rev(bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
-            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
-
-        if (hasil !== "ADA") {
-            getprint("RESPONSE REV TRANSFER", {
-                code: invelid_transaction,
-                status: "GAGAL",
-                message: "Transaksi tidak ditemukan",
-                rrn: rrn,
-                data: null
-            });
-
-            return res.status(200).send({
-                code: invelid_transaction,
-                status: "GAGAL",
-                message: "Transaksi tidak ditemukan",
-                rrn: rrn,
-                data: null
-            });
-        }
-    }
 
     if (trx_code == Transfer_In) {
+
+        /** PENGECEKAN TRANSAKSI REVERSAL **/
+        if (trx_type == "REV") {
+            let hasil = await check_rev(bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+            if (hasil !== "ADA") {
+                getprint("RESPONSE REV TRANSFER IN", {
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+
+                return res.status(200).send({
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+            }
+        }
+
+        /** MENAMBAHKAN LOG  REQUEST **/
         await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
         getprint("REQUEST TRANSFER IN", req.body)
-        /* Checking the status of the account. */
+
+        /** PENGECEKAN STATUS DAN SALDO PADA REKENING DEBET */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+            /** MENAMBAHKAN LOG RESPONSE DAN MEMBERIKAN RETURN **/
+
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
             getprint("RESPONSE TRANSFER IN", valdr)
 
@@ -132,11 +142,17 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+
+        /** PENGECEKAN STATUS DAN SALDO PADA REKENING CREDIT 1 */
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+            /** MENAMBAHKAN LOG RESPONSE DAN MEMBERIKAN RETURN **/
+
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
+
 
             getprint("RESPONSE TRANSFER IN", valcr1)
 
@@ -145,11 +161,16 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /** PENGECEKAN STATUS DAN SALDO PADA REKENING CREDIT 2 */
         let valcr2 = await checkstatus(gl_rek_cr_2, gl_jns_cr_2, 0, rrn)
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+            /** MENAMBAHKAN LOG RESPONSE DAN MEMBERIKAN RETURN **/
+
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
 
             getprint("RESPONSE TRANSFER IN", valcr2)
 
@@ -158,13 +179,17 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* A function that is called from another file. */
+        /** MEMPEROSES TRANSAKSI POKOK TRX MAUPUN REV **/
         nama_rekdr = await trf_in_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, keterangan)
 
+        /** MEMPEROSES TRANSAKSI FEE TRX MAUPUN REV **/
         if (trans_fee > 0) {
             await trf_in_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan)
         }
 
+        /** MENAMBAHKAN LOG RESPONSE DAN MEMBERIKAN RETURN **/
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
         getprint("RESPONSE TRANSFER IN", {
             code: Successful,
@@ -208,15 +233,46 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Transfer_Out) {
+
+        /** PENGECEKAN TRANSAKSI REVERSAL **/
+        if (trx_type == "REV") {
+            let hasil = await check_rev(bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+            if (hasil !== "ADA") {
+                getprint("RESPONSE REV TRANSFER OUT", {
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+
+                return res.status(200).send({
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+            }
+        }
+
+        /** MENAMBAHKAN LOG REQUEST **/
         await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
         getprint("REQUEST TRANSFER OUT", req.body)
-        /* Checking the status of the account. */
+
+        /** PENGECEKAN STATUS DAN SALDO REKENING DEBET */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+
+            /** MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
             getprint("RESPONSE TRANSFER OUT", valdr)
 
@@ -225,11 +281,15 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /** PENGECEKAN STATUS DAN SALDO REKENING CREDIT 1 */
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+
+            /** MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
 
             getprint("RESPONSE TRANSFER OUT", valcr1)
 
@@ -238,11 +298,16 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /** PENGECEKAN STATUS DAN SALDO REKENING CREDIT 2 */
         let valcr2 = await checkstatus(gl_rek_cr_2, gl_jns_cr_2, 0, rrn)
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+
+            /** MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
 
             getprint("RESPONSE TRANSFER OUT", valcr2)
 
@@ -251,12 +316,17 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* A function that is called from another file. */
+        /** PROSES TRANSAKSI POKOK TRX MAUPUN REV */
         nama_rekdr = await trf_out_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, keterangan)
 
+        /** PROSES TRANSAKSI FEE TRX MAUPUN REV */
         if (trans_fee > 0) {
             await trf_out_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan)
         }
+
+        /** MENAMBAHKAN LOG RESPONSE DAN RETURN */
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
 
         getprint("RESPONSE TRANSFER OUT", {
@@ -302,16 +372,47 @@ router.post('/', async (req, res) => {
 
 
     } else if (trx_code == Pindah_Buku) {
+
+        /** PENGECEKAN TRANSAKSI REVERSAL */
+        if (trx_type == "REV") {
+            let hasil = await check_rev(bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
+
+            if (hasil !== "ADA") {
+                getprint("RESPONSE REV TRANSFER PINDAH BUKU", {
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+
+                return res.status(200).send({
+                    code: invelid_transaction,
+                    status: "GAGAL",
+                    message: "Transaksi tidak ditemukan",
+                    rrn: rrn,
+                    data: null
+                });
+            }
+        }
+        /** MENAMBAHKAN LOG REQUEST */
         await insertlog("REQ", bpr_id, trx_code, trx_type, "", no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, "")
 
 
         getprint("REQUEST PINDAH BUKU", req.body)
-        /* Checking the status of the account. */
+
+        /** PENGECEKAN STATUS DAN SALDO REKENING DEBET */
         let valdr = await checkstatus(gl_rek_db_1, gl_jns_db_1, amount + trans_fee, rrn)
         if (valdr === undefined) {
 
         } else if (Object.keys(valdr).length !== 0) {
+
+            /**MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
+
 
             getprint("RESPONSE PINDAH BUKU", valdr)
 
@@ -320,11 +421,16 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /** PENGECEKAN STATUS DAN SALDO REKENING CREDIT 1 */
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
         if (valcr1 === undefined) {
 
         } else if (Object.keys(valcr1).length !== 0) {
+
+            /**MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr1.code)
+
 
             getprint("RESPONSE PINDAH BUKU", valcr1)
 
@@ -333,11 +439,16 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* Checking the status of the account. */
+        /** PENGECEKAN STATUS DAN SALDO REKENING CREDIT 2 */
         let valcr2 = await checkstatus(gl_rek_cr_2, gl_jns_cr_2, 0, rrn)
         if (valcr2 === undefined) {
 
         } else if (Object.keys(valcr2).length !== 0) {
+
+            /**MENAMBAHKAN LOG RESPONSE DAN RETURN */
+            await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+                gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valcr2.code)
+
 
             getprint("RESPONSE PINDAH BUKU", valcr2)
             return res.status(200).send(
@@ -345,12 +456,17 @@ router.post('/', async (req, res) => {
             )
         };
 
-        /* A function that is called from another file. */
+        /**MEMPORSES TRANSAKSI POKOK TRX MAUPUN REV */
         nama_rekdr = await pindahbuku_pok(gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1, gl_amount_cr_1, trx_type, rrn, keterangan)
 
+        /**MEMPORSES TRANSAKSI FEE TRX MAUPUN REV */
         if (trans_fee > 0) {
             await pindahbuku_fee(gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, trx_type, rrn, keterangan)
         }
+
+        /**MENAMBAHKAN LOG RESPONSE DAN RETURN */
+        await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, product_name, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
+            gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
 
         getprint("RESPONSE PINDAH BUKU", {

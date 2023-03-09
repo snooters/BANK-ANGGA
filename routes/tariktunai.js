@@ -135,10 +135,9 @@ router.post('/', async (req, res) => {
 
             getprint("RESPONSE TOKEN", valdr)
 
-            // return res.status(200).send(
-            //     valdr
-
-            // )
+            return res.status(200).send(
+                valdr
+            )
         };
 
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
@@ -367,5 +366,6 @@ router.post('/', async (req, res) => {
         });
     }
 });
+
 
 module.exports = router;

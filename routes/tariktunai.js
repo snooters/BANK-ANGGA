@@ -134,11 +134,11 @@ router.post('/', async (req, res) => {
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
             getprint("RESPONSE TOKEN", valdr)
-            /*
-                        return res.status(200).send(
-                            valdr
-                            
-                        )*/
+
+            // return res.status(200).send(
+            //     valdr
+
+            // )
         };
 
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)

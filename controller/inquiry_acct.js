@@ -1,7 +1,8 @@
 require('dotenv').config();
-const { query } = require('express');
+//const { query } = require('express');
 var express = require('express');
 const sql = require('msnodesqlv8');
+const { exect } = require('./executequery');
 const { str,
     invelid_transaction,
     rek_tidakada } = process.env;
@@ -14,6 +15,9 @@ async function getnameacct(noacc, jns_id) {
     } else if (jns_id == "2") {
         query = `select * from m_tabunganc where noacc='${noacc}'`
     }
+    hasil = await exect(query)
+    return hasil
+    /*
     return new Promise((resolve, reject) => {
         sql.query(str, query, (err, rows) => {
             if (err) {
@@ -22,7 +26,7 @@ async function getnameacct(noacc, jns_id) {
                 resolve(rows);
             }
         });
-    });
+    });*/
 };
 
 async function getsaldoacct(noacc, jns_id) {
@@ -38,6 +42,9 @@ async function getsaldoacct(noacc, jns_id) {
         (select sbbprinc from setup_tabungan where kodeprd = m_tabunganc.kodeprd) as sbbtab,
         trnke from m_tabunganc where noacc ='${noacc}'`
     }
+    hasil = await exect(query)
+    return hasil
+    /*
     return new Promise((resolve, reject) => {
         sql.query(str, query, (err, rows) => {
             if (err) {
@@ -47,6 +54,7 @@ async function getsaldoacct(noacc, jns_id) {
             }
         });
     });
+    */
 
 };
 

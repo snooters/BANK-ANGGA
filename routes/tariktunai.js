@@ -134,10 +134,11 @@ router.post('/', async (req, res) => {
                 gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, valdr.code)
 
             getprint("RESPONSE TOKEN", valdr)
-
-            return res.status(200).send(
-                valdr
-            )
+            /*
+                        return res.status(200).send(
+                            valdr
+                            
+                        )*/
         };
 
         let valcr1 = await checkstatus(gl_rek_cr_1, gl_jns_cr_1, 0, rrn)
@@ -176,48 +177,47 @@ router.post('/', async (req, res) => {
         await insertlog("RES", bpr_id, trx_code, trx_type, no_hp, no_rek, amount, trans_fee, tgl_trans, tgl_transmis, keterangan, rrn, gl_rek_db_1, gl_jns_db_1, gl_amount_db_1, gl_rek_cr_1, gl_jns_cr_1,
             gl_amount_cr_1, gl_rek_db_2, gl_jns_db_2, gl_amount_db_2, gl_rek_cr_2, gl_jns_cr_2, gl_amount_cr_2, Successful)
 
-        if (trx_type == "REV") {
-            getprint("RESPONSE TOKEN", {
-                code: Successful,
-                status: "SUKSES",
-                message: "SUKSES",
-                rrn: rrn,
-                data: {
-                    bpr_id: bpr_id,
-                    trx_code: trx_code,
-                    trx_type: trx_type,
-                    no_hp: no_hp,
-                    no_rek: no_rek,
-                    nama: nama_dr,
-                    amount: amount,
-                    trans_fee: trans_fee,
-                    tgl_trans: tgl_trans,
-                    tgl_transmis: tgl_transmis,
-                    noreff: tgl_trans.substr(0, 8) + rrn,
-                    status_rek: "AKTIF"
-                }
-            });
-            return res.status(200).send({
-                code: Successful,
-                status: "SUKSES",
-                message: "SUKSES",
-                rrn: rrn,
-                data: {
-                    bpr_id: bpr_id,
-                    trx_code: trx_code,
-                    trx_type: trx_type,
-                    no_hp: no_hp,
-                    no_rek: no_rek,
-                    nama: nama_dr,
-                    amount: amount,
-                    trans_fee: trans_fee,
-                    tgl_trans: tgl_trans,
-                    tgl_transmis: tgl_transmis,
-                    noreff: tgl_trans.substr(0, 8) + rrn,
-                    status_rek: "AKTIF"
-                }
-            });
-        }
+
+        getprint("RESPONSE TOKEN", {
+            code: Successful,
+            status: "SUKSES",
+            message: "SUKSES",
+            rrn: rrn,
+            data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_hp: no_hp,
+                no_rek: no_rek,
+                nama: nama_dr,
+                amount: amount,
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
+            }
+        });
+        return res.status(200).send({
+            code: Successful,
+            status: "SUKSES",
+            message: "SUKSES",
+            rrn: rrn,
+            data: {
+                bpr_id: bpr_id,
+                trx_code: trx_code,
+                trx_type: trx_type,
+                no_hp: no_hp,
+                no_rek: no_rek,
+                nama: nama_dr,
+                amount: amount,
+                trans_fee: trans_fee,
+                tgl_trans: tgl_trans,
+                tgl_transmis: tgl_transmis,
+                noreff: tgl_trans.substr(0, 8) + rrn,
+                status_rek: "AKTIF"
+            }
+        });
 
     } else if (trx_code == Release_Tarik_Tunai) {
         getprint("REQUEST RELEASE TOKEN", req.body)
